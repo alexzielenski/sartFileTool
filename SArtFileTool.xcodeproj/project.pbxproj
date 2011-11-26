@@ -1,0 +1,249 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		FA128450139C4179000CC681 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA12844F139C4179000CC681 /* Foundation.framework */; };
+		FA128453139C4179000CC681 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = FA128452139C4179000CC681 /* main.m */; };
+		FA12845D139C4CCE000CC681 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA12845C139C4CCE000CC681 /* Cocoa.framework */; };
+		FAC520AC139DA219004B1713 /* SArtFileDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = FAC520AA139DA219004B1713 /* SArtFileDecoder.m */; };
+		FAC520B0139DA910004B1713 /* SartFileEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = FAC520AE139DA910004B1713 /* SartFileEncoder.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		FA128449139C4179000CC681 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		FA12844B139C4179000CC681 /* SArtFileTool */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SArtFileTool; sourceTree = BUILT_PRODUCTS_DIR; };
+		FA12844F139C4179000CC681 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		FA128452139C4179000CC681 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		FA128455139C4179000CC681 /* SArtFileTool-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SArtFileTool-Prefix.pch"; sourceTree = "<group>"; };
+		FA128456139C4179000CC681 /* SArtFileTool.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = SArtFileTool.1; sourceTree = "<group>"; };
+		FA12845C139C4CCE000CC681 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		FAC520AA139DA219004B1713 /* SArtFileDecoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SArtFileDecoder.m; sourceTree = "<group>"; };
+		FAC520AB139DA219004B1713 /* SArtFileDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SArtFileDecoder.h; sourceTree = "<group>"; };
+		FAC520AE139DA910004B1713 /* SartFileEncoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SartFileEncoder.m; sourceTree = "<group>"; };
+		FAC520AF139DA910004B1713 /* SartFileEncoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SartFileEncoder.h; sourceTree = "<group>"; };
+		FADC745313D8F92A003D0856 /* Defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Defines.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		FA128448139C4179000CC681 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FA12845D139C4CCE000CC681 /* Cocoa.framework in Frameworks */,
+				FA128450139C4179000CC681 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		FA128440139C4179000CC681 = {
+			isa = PBXGroup;
+			children = (
+				FA12845C139C4CCE000CC681 /* Cocoa.framework */,
+				FA128451139C4179000CC681 /* SArtFileTool */,
+				FA12844E139C4179000CC681 /* Frameworks */,
+				FA12844C139C4179000CC681 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		FA12844C139C4179000CC681 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FA12844B139C4179000CC681 /* SArtFileTool */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		FA12844E139C4179000CC681 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				FA12844F139C4179000CC681 /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		FA128451139C4179000CC681 /* SArtFileTool */ = {
+			isa = PBXGroup;
+			children = (
+				FAC520AB139DA219004B1713 /* SArtFileDecoder.h */,
+				FAC520AA139DA219004B1713 /* SArtFileDecoder.m */,
+				FAC520AF139DA910004B1713 /* SartFileEncoder.h */,
+				FAC520AE139DA910004B1713 /* SartFileEncoder.m */,
+				FA128452139C4179000CC681 /* main.m */,
+				FADC745313D8F92A003D0856 /* Defines.h */,
+				FA128456139C4179000CC681 /* SArtFileTool.1 */,
+				FA128454139C4179000CC681 /* Supporting Files */,
+			);
+			path = SArtFileTool;
+			sourceTree = "<group>";
+		};
+		FA128454139C4179000CC681 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				FA128455139C4179000CC681 /* SArtFileTool-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		FA12844A139C4179000CC681 /* SArtFileTool */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FA128459139C4179000CC681 /* Build configuration list for PBXNativeTarget "SArtFileTool" */;
+			buildPhases = (
+				FA128447139C4179000CC681 /* Sources */,
+				FA128448139C4179000CC681 /* Frameworks */,
+				FA128449139C4179000CC681 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SArtFileTool;
+			productName = SArtFileTool;
+			productReference = FA12844B139C4179000CC681 /* SArtFileTool */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		FA128442139C4179000CC681 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0410;
+				ORGANIZATIONNAME = "Alex Zielenski";
+			};
+			buildConfigurationList = FA128445139C4179000CC681 /* Build configuration list for PBXProject "SArtFileTool" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = FA128440139C4179000CC681;
+			productRefGroup = FA12844C139C4179000CC681 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				FA12844A139C4179000CC681 /* SArtFileTool */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		FA128447139C4179000CC681 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FA128453139C4179000CC681 /* main.m in Sources */,
+				FAC520AC139DA219004B1713 /* SArtFileDecoder.m in Sources */,
+				FAC520B0139DA910004B1713 /* SartFileEncoder.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		FA128457139C4179000CC681 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = 4.2;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		FA128458139C4179000CC681 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = 4.2;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		FA12845A139C4179000CC681 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "SArtFileTool/SArtFileTool-Prefix.pch";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		FA12845B139C4179000CC681 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "SArtFileTool/SArtFileTool-Prefix.pch";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		FA128445139C4179000CC681 /* Build configuration list for PBXProject "SArtFileTool" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FA128457139C4179000CC681 /* Debug */,
+				FA128458139C4179000CC681 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FA128459139C4179000CC681 /* Build configuration list for PBXNativeTarget "SArtFileTool" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FA12845A139C4179000CC681 /* Debug */,
+				FA12845B139C4179000CC681 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = FA128442139C4179000CC681 /* Project object */;
+}

@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'SArtFileTool' target in the 'SArtFileTool' project
+//
+
+#ifdef __OBJC__
+	#import <Foundation/Foundation.h>
+#endif

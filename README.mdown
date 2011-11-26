@@ -1,0 +1,9 @@
+SArtFileTool for Lion & Snow Leopard
+===================================
+SArtFileTool is a command line tool for encoding and decoding the ArtFile.bin found in `/System/Library/PrivateFrameworks/CoreUI.framework/Versions/A/SArtFile.bin`. It its current state it can flawlessly decode SArtFile.bin and ArtFile.bin. Excuse my messy code! You can find the ArtFile.bin counterpart [here!](https://github.com/alexzielenski/artFileTool)
+
+License
+===================================
+SArtFileTool is license under the [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-nc-sa/3.0/ "Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License") because I would prefer people not make commercial applications based off of this code. The theming community is supposed to be open and as the name implies: A community.
+
+Credit should be made up to [Alex Zielenski](http://alexzielenski.com) and [Indragie Karunaratne](http://indragie.com)
