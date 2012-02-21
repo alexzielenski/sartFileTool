@@ -65,7 +65,7 @@ int main (int argc, const char * argv[])
 			} else if ((!strcmp(argv[x], "10.8"))) {
 				OSVersion = 0x108;
 			} else {
-				printf("Unknown argument for -os option.");
+				printf("Unknown argument '%s' for -os option.", argv[x]);
 				printf(help, NULL);
 				return 1;
 			}
