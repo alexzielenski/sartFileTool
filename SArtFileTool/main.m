@@ -116,6 +116,7 @@ int main (int argc, const char * argv[])
 				}
 				[darwinVersion release];
 			}
+			free(darwin_version);
 		}
 	}
 	
