@@ -51,10 +51,15 @@ static struct file_descriptor descForEntry(NSInteger idx) {
 	offset+=(int)sizeof(uint16_t);
 	fd.unknown = readShortAt(offset);
 	offset+=(int)sizeof(uint16_t);
-	fd.unknown2 = readIntAt(offset);
-	offset+=(int)sizeof(uint32_t);
-	fd.unknown3 = readIntAt(offset);
-	offset+=(int)sizeof(uint32_t);
+	
+	if (OSVersion < 0x108)
+	{
+		fd.unknown2 = readIntAt(offset);
+		offset+=(int)sizeof(uint32_t);
+		fd.unknown3 = readIntAt(offset);
+		offset+=(int)sizeof(uint32_t);
+	}
+	
 	fd.image_width = readShortAt(offset);
 	offset+=(int)sizeof(uint16_t);
 	fd.image_height = readShortAt(offset);
@@ -173,7 +178,7 @@ void writeImageData(CFDataRef data, CFURLRef path, uint16_t type, uint16_t width
 	CGDataProviderRef provider = CGDataProviderCreateWithCFData(data);
 	CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
 	CGBitmapInfo bitmapInfo = kCGImageAlphaFirst;
-	if (!legacy)
+	if (OSVersion > 0x106)
 		bitmapInfo |= kCGBitmapByteOrder32Little;
 	
 	CGImageRef cgImage = CGImageCreate(width, height, 8, 32, 4 * width, colorSpace, bitmapInfo, provider, NULL, NO, kCGRenderingIntentDefault);
