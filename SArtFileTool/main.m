@@ -43,6 +43,8 @@ int main (int argc, const char * argv[])
 	BOOL decode = NO;
 	BOOL encode = NO;
 	
+	OSVersion = 0;
+	
 	int startIdx = 0;
 	for (int x = 1; x < argc; x++) {
 		if  ((!strcmp(argv[x], "-l"))) { // Obsolete option. Use -os instead.
