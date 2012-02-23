@@ -88,7 +88,7 @@ static struct file_descriptor descForEntry(NSInteger idx) {
 		offset+=(int)sizeof(uint32_t);
 		fd.retinaRep_file_offset = readIntAt(offset);
 		offset+=(int)sizeof(uint32_t);	
-	} else if (fd.type==1) {
+	} else if (fd.type==1 && fd.unknown!=1) {
 		//retina
 		fd.retina_width = readShortAt(offset);
 		offset+=(int)sizeof(uint16_t);
@@ -121,7 +121,7 @@ void writeImage(int idx, NSString *path) {
 		[imageData writeToFile:[path stringByAppendingPathComponent:[NSString stringWithFormat:@"%i.pdf", idx]] atomically:NO];
 	}
 	
-	if (fd.type==1) {
+	if (fd.type==1 && fd.unknown!=1) {
 		uint16_t retina_width = fd.retina_width;
 		uint16_t retina_height = fd.retina_height;
 		uint32_t retina_length = fd.retina_file_size;
