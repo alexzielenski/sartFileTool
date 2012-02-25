@@ -51,10 +51,15 @@ static struct file_descriptor descForEntry(NSInteger idx) {
 	offset+=(int)sizeof(uint16_t);
 	fd.unknown = readShortAt(offset);
 	offset+=(int)sizeof(uint16_t);
-	fd.unknown2 = readIntAt(offset);
-	offset+=(int)sizeof(uint32_t);
-	fd.unknown3 = readIntAt(offset);
-	offset+=(int)sizeof(uint32_t);
+	
+	if (OSVersion < 0x108)
+	{
+		fd.unknown2 = readIntAt(offset);
+		offset+=(int)sizeof(uint32_t);
+		fd.unknown3 = readIntAt(offset);
+		offset+=(int)sizeof(uint32_t);
+	}
+	
 	fd.image_width = readShortAt(offset);
 	offset+=(int)sizeof(uint16_t);
 	fd.image_height = readShortAt(offset);
@@ -83,7 +88,7 @@ static struct file_descriptor descForEntry(NSInteger idx) {
 		offset+=(int)sizeof(uint32_t);
 		fd.retinaRep_file_offset = readIntAt(offset);
 		offset+=(int)sizeof(uint32_t);	
-	} else if (fd.type==1) {
+	} else if (fd.type==1 && fd.unknown!=1) {
 		//retina
 		fd.retina_width = readShortAt(offset);
 		offset+=(int)sizeof(uint16_t);
@@ -116,7 +121,7 @@ void writeImage(int idx, NSString *path) {
 		[imageData writeToFile:[path stringByAppendingPathComponent:[NSString stringWithFormat:@"%i.pdf", idx]] atomically:NO];
 	}
 	
-	if (fd.type==1) {
+	if (fd.type==1 && fd.unknown!=1) {
 		uint16_t retina_width = fd.retina_width;
 		uint16_t retina_height = fd.retina_height;
 		uint32_t retina_length = fd.retina_file_size;
@@ -173,7 +178,7 @@ void writeImageData(CFDataRef data, CFURLRef path, uint16_t type, uint16_t width
 	CGDataProviderRef provider = CGDataProviderCreateWithCFData(data);
 	CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
 	CGBitmapInfo bitmapInfo = kCGImageAlphaFirst;
-	if (!legacy)
+	if (OSVersion > 0x106)
 		bitmapInfo |= kCGBitmapByteOrder32Little;
 	
 	CGImageRef cgImage = CGImageCreate(width, height, 8, 32, 4 * width, colorSpace, bitmapInfo, provider, NULL, NO, kCGRenderingIntentDefault);

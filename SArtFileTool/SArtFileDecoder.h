@@ -15,9 +15,9 @@ struct file_header {
 
 struct file_descriptor {
 	uint16_t type; // 1 is tiff. 2 is PNG. 3 is PDF
-	uint16_t unknown; // Flags or a tag maybe. Seems to be 1 for png, 2 for tiff and 3 for pdf
-	uint32_t unknown2; // This number is file_size - 45
-	uint32_t unknown3; // This number is unknown2 + legacyRep_file_size + retinaRep_file_size
+	uint16_t unknown; // Flags or a tag maybe. 1 means no retina resource.
+	uint32_t unknown2; // This number is file_size - 45 (unused as of 10.8)
+	uint32_t unknown3; // This number is unknown2 + legacyRep_file_size + retinaRep_file_size (unused as of 10.8)
 	uint16_t image_width;
 	uint16_t image_height;
 	uint32_t file_size;
