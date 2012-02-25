@@ -55,10 +55,15 @@ static struct file_descriptor descForEntry(NSInteger idx) {
 	offset+=(int)sizeof(uint16_t);
 	fd.unknown = readShortAt(offset);
 	offset+=(int)sizeof(uint16_t);
-	fd.unknown2 = readIntAt(offset);
-	offset+=(int)sizeof(uint32_t);
-	fd.unknown3 = readIntAt(offset);
-	offset+=(int)sizeof(uint32_t);
+	
+	if (OSVersion < 0x108)
+	{
+		fd.unknown2 = readIntAt(offset);
+		offset+=(int)sizeof(uint32_t);
+		fd.unknown3 = readIntAt(offset);
+		offset+=(int)sizeof(uint32_t);
+	}
+	
 	fd.image_width = readShortAt(offset);
 	offset+=(int)sizeof(uint16_t);
 	fd.image_height = readShortAt(offset);
@@ -138,7 +143,7 @@ unsigned char* bytesFromData(NSData *data, uint16_t *w, uint16_t *h) {
 			r = 0;
 		}
 		
-		if (!legacy) {
+		if (OSVersion > 0x106) {
 			bytes[y]=b;
 			bytes[y+1]=g;
 			bytes[y+2]=r;
@@ -164,8 +169,9 @@ void sartfile_encode(NSString *folder, NSString *originalPath, NSString *destPat
 	
 	for (int x = 0; x < header.artCount; x++) {
 		struct file_descriptor fd = descForEntry(x);
-		uint32_t offset = readIntAt(8 + sizeof(uint32_t) * x);
-
+		uint32_t base_offset = readIntAt(8 + sizeof(uint32_t) * x);
+		uint32_t offset = base_offset;
+		
 		NSData *origImageData = [NSData dataWithContentsOfFile:[folder stringByAppendingPathComponent:[NSString stringWithFormat:@"%i.%@", x, ((fd.type!=3) ? @"png" : @"pdf")]]];
 		NSData *retinaImageData = nil;
 		if (fd.type==1) {
@@ -206,9 +212,13 @@ void sartfile_encode(NSString *folder, NSString *originalPath, NSString *destPat
 		fd.image_height=CFSwapInt16HostToLittle((uint16_t)height);
 		fd.type=CFSwapInt16HostToLittle(fd.type);
 		fd.unknown=CFSwapInt16HostToLittle(fd.unknown);
-		fd.unknown2=CFSwapInt32HostToLittle(fd.unknown2);
-		fd.unknown3=CFSwapInt32HostToLittle(fd.unknown3);		
-	
+		
+		if (OSVersion < 0x108)
+		{
+			fd.unknown2=CFSwapInt32HostToLittle(fd.unknown2);
+			fd.unknown3=CFSwapInt32HostToLittle(fd.unknown3);		
+		}
+		
 		// extended pdf header
 		if (fd.type==3) {
 			fd.legacyRep_file_size = CFSwapInt32HostToLittle(fd.image_width*fd.image_height*4);
@@ -229,48 +239,73 @@ void sartfile_encode(NSString *folder, NSString *originalPath, NSString *destPat
 		
 		[entire replaceBytesInRange:NSMakeRange(offset, 2) 
 						   withBytes:&fd.type];
-		[entire replaceBytesInRange:NSMakeRange(offset+2, 2) 
-						   withBytes:&fd.unknown];
-		[entire replaceBytesInRange:NSMakeRange(offset+4, 4) 
-						   withBytes:&fd.unknown2];
-		[entire replaceBytesInRange:NSMakeRange(offset+8, 4) 
-						   withBytes:&fd.unknown3];
-		[entire replaceBytesInRange:NSMakeRange(offset+12, 2) 
-						   withBytes:&fd.image_width];
-		[entire replaceBytesInRange:NSMakeRange(offset+14, 2) 
-						   withBytes:&fd.image_height];
-		[entire replaceBytesInRange:NSMakeRange(offset+16, 4) 
-						   withBytes:&fd.file_size];
-		[entire replaceBytesInRange:NSMakeRange(offset+20, 4)
-						   withBytes:&fd.file_offset];
+		offset += 2;
+		[entire replaceBytesInRange:NSMakeRange(offset, 2) 
+						  withBytes:&fd.unknown];
+		offset += 2;
+		
+		if (OSVersion < 0x108)
+		{
+			[entire replaceBytesInRange:NSMakeRange(offset, 4) 
+							  withBytes:&fd.unknown2];
+			offset += 4;
+			[entire replaceBytesInRange:NSMakeRange(offset, 4) 
+							  withBytes:&fd.unknown3];
+			offset += 4;
+		}
+		
+		[entire replaceBytesInRange:NSMakeRange(offset, 2) 
+						  withBytes:&fd.image_width];
+		offset += 2;
+		[entire replaceBytesInRange:NSMakeRange(offset, 2) 
+						  withBytes:&fd.image_height];
+		offset += 2;
+		[entire replaceBytesInRange:NSMakeRange(offset, 4) 
+						  withBytes:&fd.file_size];
+		offset += 4;
+		[entire replaceBytesInRange:NSMakeRange(offset, 4)
+						  withBytes:&fd.file_offset];
+		offset += 4;
 
 		if (fd.type==3) {
-			[entire replaceBytesInRange:NSMakeRange(offset+24, 2) 
+			[entire replaceBytesInRange:NSMakeRange(offset, 2) 
 							  withBytes:&fd.legacyRep_width];
-			[entire replaceBytesInRange:NSMakeRange(offset+26, 2) 
+			offset += 2;
+			[entire replaceBytesInRange:NSMakeRange(offset, 2) 
 							  withBytes:&fd.legacyRep_height];
-			[entire replaceBytesInRange:NSMakeRange(offset+28, 4) 
+			offset += 2;
+			[entire replaceBytesInRange:NSMakeRange(offset, 4) 
 							  withBytes:&fd.legacyRep_file_size];
-			[entire replaceBytesInRange:NSMakeRange(offset+32, 4) 
+			offset += 4;
+			[entire replaceBytesInRange:NSMakeRange(offset, 4) 
 							  withBytes:&fd.legacyRep_file_offset];
-			[entire replaceBytesInRange:NSMakeRange(offset+36, 2) 
+			offset += 4;
+			[entire replaceBytesInRange:NSMakeRange(offset, 2) 
 							  withBytes:&fd.retinaRep_width];
-			[entire replaceBytesInRange:NSMakeRange(offset+38, 2) 
+			offset += 2;
+			[entire replaceBytesInRange:NSMakeRange(offset, 2) 
 							  withBytes:&fd.retinaRep_height];
-			[entire replaceBytesInRange:NSMakeRange(offset+40, 4) 
+			offset += 2;
+			[entire replaceBytesInRange:NSMakeRange(offset, 4) 
 							  withBytes:&fd.retinaRep_file_size];
-			[entire replaceBytesInRange:NSMakeRange(offset+44, 4) 
+			offset += 4;
+			[entire replaceBytesInRange:NSMakeRange(offset, 4) 
 							  withBytes:&fd.retinaRep_file_offset];
+			offset += 4;
 		} else if (fd.type==1) {
 			// for @2X
-			[entire replaceBytesInRange:NSMakeRange(offset+24, 2) 
+			[entire replaceBytesInRange:NSMakeRange(offset, 2) 
 							  withBytes:&fd.retina_width];
-			[entire replaceBytesInRange:NSMakeRange(offset+26, 2) 
+			offset += 2;
+			[entire replaceBytesInRange:NSMakeRange(offset, 2) 
 							  withBytes:&fd.retina_height];
-			[entire replaceBytesInRange:NSMakeRange(offset+28, 4) 
+			offset += 2;
+			[entire replaceBytesInRange:NSMakeRange(offset, 4) 
 							  withBytes:&fd.retina_file_size];
-			[entire replaceBytesInRange:NSMakeRange(offset+32, 4) 
+			offset += 4;
+			[entire replaceBytesInRange:NSMakeRange(offset, 4) 
 							  withBytes:&fd.retina_file_offset];
+			offset += 4;
 
 		} 
 		
@@ -322,7 +357,7 @@ void sartfile_encode(NSString *folder, NSString *originalPath, NSString *destPat
 		}
 	
 		
-		printf("Encoded Index : %i\nHeader Offset : %i\n", x, offset);
+		printf("Encoded Index : %i\nHeader Offset : %i\n", x, base_offset);
 	
 	}
 	

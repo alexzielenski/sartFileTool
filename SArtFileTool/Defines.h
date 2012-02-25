@@ -9,6 +9,6 @@
 #ifndef SArtFileTool_Defines_h
 #define SArtFileTool_Defines_h
 
-extern BOOL legacy;
+extern int OSVersion;
 
 #endif
