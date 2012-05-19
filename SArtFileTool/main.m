@@ -106,6 +106,9 @@ int main (int argc, const char * argv[])
     
     path2 = [NSString stringWithUTF8String:argv[startIdx + 1]];
     
+    path1 = [path1 stringByExpandingTildeInPath];
+    path2 = [path2 stringByExpandingTildeInPath];
+    
     @try {
         uint64_t start = mach_absolute_time();
        
@@ -122,9 +125,11 @@ int main (int argc, const char * argv[])
         } else {
             file = [SArtFile sartFileWithFolderAtURL:[NSURL fileURLWithPath:path1]];
             
-            file.majorOSVersion  = majorOS;
-            file.minorOSVersion  = minorOS;
-            file.bugFixOSVersion = bugFixOS;
+            if (majorOS != -1) {
+                file.majorOSVersion  = majorOS;
+                file.minorOSVersion  = minorOS;
+                file.bugFixOSVersion = bugFixOS;
+            }
             
             file.shouldWritePDFReps = pdf;
             
