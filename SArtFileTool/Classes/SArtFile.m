@@ -166,6 +166,8 @@
 - (void)dealloc
 {
     [_header release];
+    self.buffer1 = nil;
+    
     [super dealloc];
 }
 

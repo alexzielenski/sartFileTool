@@ -120,6 +120,12 @@
     return self;
 }
 
+- (void)dealloc
+{
+    self.fileHeaders = nil;
+    [super dealloc];
+}
+
 - (NSData *)headerData
 {
     NSMutableData *headerData = [NSMutableData dataWithCapacity:12];

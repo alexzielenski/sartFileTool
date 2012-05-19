@@ -30,11 +30,11 @@
 
 @implementation SFFileHeader
 
-@synthesize width     = _width;
-@synthesize height    = _height;
-@synthesize length    = _length;
-@synthesize offset    = _offset;
-@synthesize imageData = _imageData;
+@synthesize width      = _width;
+@synthesize height     = _height;
+@synthesize length     = _length;
+@synthesize offset     = _offset;
+@synthesize imageData  = _imageData;
 @synthesize imageClass = _imageClass;
 
 + (SFFileHeader *)fileHeaderWithData:(NSData *)data range:(NSRange)range
@@ -92,6 +92,12 @@
     }
     
     return self;
+}
+
+- (void)dealloc
+{
+    self.imageData = nil;
+    [super dealloc];
 }
 
 - (NSImageRep *)imageRepresentation

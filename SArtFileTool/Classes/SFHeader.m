@@ -161,6 +161,12 @@
     return self;
 }
 
+- (void)dealloc
+{
+    self.descriptors = nil;
+    [super dealloc];
+}
+
 - (NSData *)headerData
 {
     // version, file count, master offset, header offsets
