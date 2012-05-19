@@ -26,6 +26,7 @@
 
 #import "SFHeader.h"
 #import "NSData+Byte.h"
+#import "SArtFile.h"
 
 @implementation SFHeader
 @synthesize version      = _version;
@@ -163,10 +164,10 @@
     // version, file count, master offset, header offsets
     NSUInteger headerLength = 8;
     NSUInteger descOffsetLength = 4 * self.descriptors.count;
-    NSUInteger totalLength =  headerLength + descOffsetLength;
+    NSUInteger totalLength =  headerLength + descOffsetLength + self.sartFile.buffer1.length;
     
     NSUInteger totalHeaderLength = [[self.descriptors valueForKeyPath:@"@sum.expectedLength"] unsignedIntegerValue];
-        
+    
     self.masterOffset = totalLength + totalHeaderLength;
     
     uint16_t version = CFSwapInt16HostToLittle(self.version);
@@ -185,7 +186,8 @@
         
         // Set the file offsets for its files before getting the header data
         for (SFFileHeader *fileHeader in desc.fileHeaders) {
-            fileHeader.offset = fileData.length;            
+            fileHeader.offset = fileData.length;
+            
             [fileData appendData:fileHeader.sartFileData];
         }
         
@@ -199,6 +201,7 @@
     [headerData appendBytes:&offset length:sizeof(uint32_t)];
     
     [headerData appendData:descriptorOffsets];
+    [headerData appendData:self.sartFile.buffer1];
     [headerData appendData:descriptorHeaders];
     [headerData appendData:fileData];
     

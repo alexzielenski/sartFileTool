@@ -32,6 +32,8 @@
 
 @property (nonatomic, readonly) SFHeader *header;
 
+@property (nonatomic, retain) NSData *buffer1;
+
 // Options
 @property (nonatomic, assign) BOOL shouldWritePDFReps;
 @property (nonatomic, assign) int  majorOSVersion;

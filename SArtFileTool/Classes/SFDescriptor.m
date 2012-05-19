@@ -178,8 +178,7 @@
         self.type = SFDescriptorTypeHiDPIPNG;
     
     // If the PDF's cache images weren't written, write them out homes.
-    if (!self.header.sartFile.shouldWritePDFReps && self.type == SFDescriptorTypePDF && self.fileHeaders.count == 1) {
-        
+    if (!self.header.sartFile.shouldWritePDFReps && self.type == SFDescriptorTypePDF && self.fileHeaders.count == 1) {        
         NSPDFImageRep *rep = (NSPDFImageRep *)header.imageRepresentation;
         
         NSBitmapImageRep *legacy = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:NULL 

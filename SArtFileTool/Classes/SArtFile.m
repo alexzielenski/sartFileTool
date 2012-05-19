@@ -25,13 +25,19 @@
 //  OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #import "SArtFile.h"
+#import "NSData+Byte.h"
+
+@interface SArtFile ()
+- (void)generateBuffersFromData:(NSData *)data;
+@end
 
 @implementation SArtFile
-@synthesize header = _header;
+@synthesize header             = _header;
 @synthesize shouldWritePDFReps = _shouldWritePDFReps;
-@synthesize majorOSVersion = _majorOSVersion;
-@synthesize minorOSVersion = _minorOSVersion;
-@synthesize bugFixOSVersion = _bugFixOSVersion;
+@synthesize majorOSVersion     = _majorOSVersion;
+@synthesize minorOSVersion     = _minorOSVersion;
+@synthesize bugFixOSVersion    = _bugFixOSVersion;
+@synthesize buffer1            = _buffer1;
 
 #pragma mark - Lifecycle
 
@@ -44,8 +50,11 @@
 {
     if ((self = [self init])) {
         NSData *fileData = [NSData dataWithContentsOfURL:url];
-        _header = [[SFHeader headerWithData:fileData] retain];
+        _header  = [[SFHeader headerWithData:fileData] retain];
         _header.sartFile = self;
+        
+        [self generateBuffersFromData:fileData];
+
     }
     
     return self;
@@ -69,8 +78,12 @@
         _bugFixOSVersion = bugFix;
         
         NSData *fileData = [NSData dataWithContentsOfURL:url];
+        
         _header = [[SFHeader headerWithData:fileData] retain];
         _header.sartFile = self;
+        
+        
+        [self generateBuffersFromData:fileData];
     }
     
     return self;
@@ -89,6 +102,7 @@
         _majorOSVersion     = [[receipt objectForKey:@"majorOS"] intValue];
         _minorOSVersion     = [[receipt objectForKey:@"minorOS"] intValue];
         _bugFixOSVersion    = [[receipt objectForKey:@"bugFixOS"] intValue];
+        _buffer1            = [[receipt objectForKey:@"buffer1"] retain];
         _shouldWritePDFReps = [[receipt objectForKey:@"pdfsWritten"] boolValue];
         
         if ((_majorOSVersion != 10) || (_minorOSVersion <= 6)) {
@@ -99,6 +113,20 @@
     }
     
     return self;
+}
+
+- (void)generateBuffersFromData:(NSData *)data
+{
+    // The first buffer is a group of unknown data between the descriptor offset list and the descriptors
+    NSUInteger offsetLength = 8 + 4 * self.header.descriptors.count;
+    NSUInteger firstDescriptorOffset = [data intAtOffset:8];
+    
+    NSUInteger buffer1Length = firstDescriptorOffset - offsetLength;
+    
+    if (buffer1Length > 0) {
+        _buffer1 = [[data subdataWithRange:NSMakeRange(offsetLength, buffer1Length)] retain];
+    }
+    
 }
 
 + (NSURL *)sArtFilePath
@@ -154,7 +182,8 @@
                              [NSNumber numberWithInt:self.majorOSVersion], @"majorOS", 
                              [NSNumber numberWithInt:self.minorOSVersion], @"minorOS", 
                              [NSNumber numberWithInt:self.bugFixOSVersion], @"bugFixOS", 
-                             [NSNumber numberWithBool:self.shouldWritePDFReps], @"pdfsWritten", nil];
+                             [NSNumber numberWithBool:self.shouldWritePDFReps], @"pdfsWritten", 
+                             self.buffer1, @"buffer1", nil];
     
     NSFileManager *manager = [NSFileManager defaultManager];
     [manager createDirectoryAtURL:folderURL 
@@ -169,7 +198,7 @@
         
         NSUInteger index = [self.header.descriptors indexOfObject:descriptor];
         BOOL pdf = descriptor.type == SFDescriptorTypePDF;
-        
+                
         for (SFFileHeader *header in descriptor.fileHeaders) {
             NSInteger item = [descriptor.fileHeaders indexOfObject:header] + 1;
             
