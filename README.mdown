@@ -93,6 +93,8 @@ First 8 bytes of the SArtFile.bin. Gives some key information about the file.
 
 ### Unknown
 
+Currently, SArtFileTool copies this sector of bytes into the "buffer1" key of the receipt.
+
 I recently found this new sector of 820 bytes (816 under 10.8). It is a very odd area. I investigated this under 10.7.4. They seem to be in 8 byte groupings in this format:
 
 ***Format on 10.7.4***
