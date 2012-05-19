@@ -1,0 +1,292 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		FA128450139C4179000CC681 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA12844F139C4179000CC681 /* Foundation.framework */; };
+		FA128453139C4179000CC681 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = FA128452139C4179000CC681 /* main.m */; };
+		FA12845D139C4CCE000CC681 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA12845C139C4CCE000CC681 /* Cocoa.framework */; };
+		FA86A7151565149700158B80 /* SFFileHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = FA86A7141565149700158B80 /* SFFileHeader.m */; };
+		FA86A7181565172E00158B80 /* NSData+Byte.m in Sources */ = {isa = PBXBuildFile; fileRef = FA86A7171565172E00158B80 /* NSData+Byte.m */; };
+		FA86A71C156527DF00158B80 /* NSImageRep+Data.m in Sources */ = {isa = PBXBuildFile; fileRef = FA86A71B156527DF00158B80 /* NSImageRep+Data.m */; };
+		FA9700E415655E8F001661AB /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA9700E315655E8F001661AB /* Accelerate.framework */; };
+		FAEEEEEC15647E7C006343AF /* SArtFile.m in Sources */ = {isa = PBXBuildFile; fileRef = FAEEEEEB15647E7C006343AF /* SArtFile.m */; };
+		FAEEEEF115648316006343AF /* SFDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = FAEEEEF015648316006343AF /* SFDescriptor.m */; };
+		FAEEEEF415648322006343AF /* SFHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = FAEEEEF315648322006343AF /* SFHeader.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		FA128449139C4179000CC681 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		FA12844B139C4179000CC681 /* sartFileTool */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = sartFileTool; sourceTree = BUILT_PRODUCTS_DIR; };
+		FA12844F139C4179000CC681 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		FA128452139C4179000CC681 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		FA128455139C4179000CC681 /* sartFileTool-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "sartFileTool-Prefix.pch"; sourceTree = "<group>"; };
+		FA128456139C4179000CC681 /* SArtFileTool.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = SArtFileTool.1; sourceTree = "<group>"; };
+		FA12845C139C4CCE000CC681 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		FA86A7131565149700158B80 /* SFFileHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SFFileHeader.h; path = Classes/SFFileHeader.h; sourceTree = "<group>"; };
+		FA86A7141565149700158B80 /* SFFileHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SFFileHeader.m; path = Classes/SFFileHeader.m; sourceTree = "<group>"; };
+		FA86A7161565172E00158B80 /* NSData+Byte.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSData+Byte.h"; path = "Categories/NSData+Byte.h"; sourceTree = "<group>"; };
+		FA86A7171565172E00158B80 /* NSData+Byte.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSData+Byte.m"; path = "Categories/NSData+Byte.m"; sourceTree = "<group>"; };
+		FA86A71A156527DF00158B80 /* NSImageRep+Data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSImageRep+Data.h"; path = "Categories/NSImageRep+Data.h"; sourceTree = "<group>"; };
+		FA86A71B156527DF00158B80 /* NSImageRep+Data.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSImageRep+Data.m"; path = "Categories/NSImageRep+Data.m"; sourceTree = "<group>"; };
+		FA9700E315655E8F001661AB /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
+		FAEEEEEA15647E7C006343AF /* SArtFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SArtFile.h; path = Classes/SArtFile.h; sourceTree = "<group>"; };
+		FAEEEEEB15647E7C006343AF /* SArtFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SArtFile.m; path = Classes/SArtFile.m; sourceTree = "<group>"; };
+		FAEEEEEF15648316006343AF /* SFDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SFDescriptor.h; path = Classes/SFDescriptor.h; sourceTree = "<group>"; };
+		FAEEEEF015648316006343AF /* SFDescriptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SFDescriptor.m; path = Classes/SFDescriptor.m; sourceTree = "<group>"; };
+		FAEEEEF215648322006343AF /* SFHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SFHeader.h; path = Classes/SFHeader.h; sourceTree = "<group>"; };
+		FAEEEEF315648322006343AF /* SFHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SFHeader.m; path = Classes/SFHeader.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		FA128448139C4179000CC681 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FA9700E415655E8F001661AB /* Accelerate.framework in Frameworks */,
+				FA12845D139C4CCE000CC681 /* Cocoa.framework in Frameworks */,
+				FA128450139C4179000CC681 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		FA128440139C4179000CC681 = {
+			isa = PBXGroup;
+			children = (
+				FA128451139C4179000CC681 /* sartFileTool */,
+				FA12844E139C4179000CC681 /* Frameworks */,
+				FA12844C139C4179000CC681 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		FA12844C139C4179000CC681 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FA12844B139C4179000CC681 /* sartFileTool */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		FA12844E139C4179000CC681 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				FA9700E315655E8F001661AB /* Accelerate.framework */,
+				FA12845C139C4CCE000CC681 /* Cocoa.framework */,
+				FA12844F139C4179000CC681 /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		FA128451139C4179000CC681 /* sartFileTool */ = {
+			isa = PBXGroup;
+			children = (
+				FA86A7191565173200158B80 /* Category */,
+				FAEEEEEE15647E7F006343AF /* models */,
+				FA128452139C4179000CC681 /* main.m */,
+				FA128456139C4179000CC681 /* SArtFileTool.1 */,
+				FA128454139C4179000CC681 /* Supporting Files */,
+			);
+			name = sartFileTool;
+			path = SArtFileTool;
+			sourceTree = "<group>";
+		};
+		FA128454139C4179000CC681 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				FA128455139C4179000CC681 /* sartFileTool-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		FA86A7191565173200158B80 /* Category */ = {
+			isa = PBXGroup;
+			children = (
+				FA86A7161565172E00158B80 /* NSData+Byte.h */,
+				FA86A7171565172E00158B80 /* NSData+Byte.m */,
+				FA86A71A156527DF00158B80 /* NSImageRep+Data.h */,
+				FA86A71B156527DF00158B80 /* NSImageRep+Data.m */,
+			);
+			name = Category;
+			sourceTree = "<group>";
+		};
+		FAEEEEEE15647E7F006343AF /* models */ = {
+			isa = PBXGroup;
+			children = (
+				FAEEEEEA15647E7C006343AF /* SArtFile.h */,
+				FAEEEEEB15647E7C006343AF /* SArtFile.m */,
+				FAEEEEF215648322006343AF /* SFHeader.h */,
+				FAEEEEF315648322006343AF /* SFHeader.m */,
+				FAEEEEEF15648316006343AF /* SFDescriptor.h */,
+				FAEEEEF015648316006343AF /* SFDescriptor.m */,
+				FA86A7131565149700158B80 /* SFFileHeader.h */,
+				FA86A7141565149700158B80 /* SFFileHeader.m */,
+			);
+			name = models;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		FA12844A139C4179000CC681 /* sartFileTool */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FA128459139C4179000CC681 /* Build configuration list for PBXNativeTarget "sartFileTool" */;
+			buildPhases = (
+				FA128447139C4179000CC681 /* Sources */,
+				FA128448139C4179000CC681 /* Frameworks */,
+				FA128449139C4179000CC681 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = sartFileTool;
+			productName = SArtFileTool;
+			productReference = FA12844B139C4179000CC681 /* sartFileTool */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		FA128442139C4179000CC681 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+				ORGANIZATIONNAME = "Alex Zielenski";
+			};
+			buildConfigurationList = FA128445139C4179000CC681 /* Build configuration list for PBXProject "sartFileTool" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = FA128440139C4179000CC681;
+			productRefGroup = FA12844C139C4179000CC681 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				FA12844A139C4179000CC681 /* sartFileTool */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		FA128447139C4179000CC681 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FA128453139C4179000CC681 /* main.m in Sources */,
+				FAEEEEEC15647E7C006343AF /* SArtFile.m in Sources */,
+				FAEEEEF115648316006343AF /* SFDescriptor.m in Sources */,
+				FAEEEEF415648322006343AF /* SFHeader.m in Sources */,
+				FA86A7151565149700158B80 /* SFFileHeader.m in Sources */,
+				FA86A7181565172E00158B80 /* NSData+Byte.m in Sources */,
+				FA86A71C156527DF00158B80 /* NSImageRep+Data.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		FA128457139C4179000CC681 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = 4.2;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		FA128458139C4179000CC681 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = 4.2;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		FA12845A139C4179000CC681 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "SArtFileTool/sartFileTool-Prefix.pch";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				PRODUCT_NAME = sartFileTool;
+			};
+			name = Debug;
+		};
+		FA12845B139C4179000CC681 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "SArtFileTool/sartFileTool-Prefix.pch";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				PRODUCT_NAME = sartFileTool;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		FA128445139C4179000CC681 /* Build configuration list for PBXProject "sartFileTool" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FA128457139C4179000CC681 /* Debug */,
+				FA128458139C4179000CC681 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FA128459139C4179000CC681 /* Build configuration list for PBXNativeTarget "sartFileTool" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FA12845A139C4179000CC681 /* Debug */,
+				FA12845B139C4179000CC681 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = FA128442139C4179000CC681 /* Project object */;
+}

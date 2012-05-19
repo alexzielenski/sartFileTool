@@ -1,9 +1,150 @@
-SArtFileTool for Lion & Snow Leopard
+sartFileTool for Lion & Mountain Lion
 ===================================
-SArtFileTool is a command line tool for encoding and decoding the ArtFile.bin found in `/System/Library/PrivateFrameworks/CoreUI.framework/Versions/A/SArtFile.bin`. It its current state it can flawlessly decode SArtFile.bin and ArtFile.bin. Excuse my messy code! You can find the ArtFile.bin counterpart [here!](https://github.com/alexzielenski/artFileTool)
+sartFileTool is a command line tool for encoding and decoding the SArtFile.bin found in `/System/Library/PrivateFrameworks/CoreUI.framework/Versions/A/SArtFile.bin`. It its current state it can flawlessly decode and encode SArtFile.bin. 
+
+You can find the ArtFile.bin counterpart [here!](https://github.com/alexzielenski/artFileTool).
+
+In the recent update I refactored the code to be more object oriented for easy "plug and play" for Cocoa applications. They can now internally alter the SArtFile.bin contents without writing to disk right away. Also, the new version supports the encoding of SArtFiles without the help of the originally encoded one – it creates all the data itself.
+
+Specification
+===
+The SArtFile.bin is composed of four key components:
+
+<ul> 
+<li>Master Header</li>
+<li>Descriptor Offsets</li>
+<li>Descriptors</li>
+<li>File Data</li>
+</ul>
+
+### Master Header
+
+First 8 bytes of the SArtFile.bin. Gives some key information about the file.
+
+<table>
+	<tr>
+		<th>Offset</th>
+		<th>Size</th>
+		<th>Type</th>
+		<th>Purpose</th>
+	</tr>
+	<tr style="text-align: center">
+		<td>0</td>
+		<td>2</td>
+		<td>uint16_t</td>
+		<td>Believed to be a version number. Only found to be 2 right now.</td>
+	</tr>
+	<tr style="text-align: center">
+		<td>2</td>
+		<td>2</td>
+		<td>uint16_t</td>
+		<td>Amount of file descriptors found within the container.</td>
+	</tr>
+	<tr style="text-align: center">
+		<td>4</td>
+		<td>4</td>
+		<td>uint32_t</td>
+		<td>"Master offset" at which the file data begins. All file data offsets in descriptors is offset by this number.</td>
+	</tr>
+	<tr style="text-align: center">
+		<td>8</td>
+		<td>…</td>
+		<td>uint32_t</td>
+		<td>4 * fileCount size. A list of offsets to each file descriptor.</td>
+	</tr>
+</table>
+
+### Descriptor
+
+12-byte header for a file. Each descriptor can contain multiple sub-image representations. It also contains a flag to indicate its type/purpose.
+
+<table>
+	<tr>
+		<th>Offset</th>
+		<th>Size</th>
+		<th>Type</th>
+		<th>Purpose</th>
+	</tr>
+	<tr style="text-align: center">
+		<td>0</td>
+		<td>2</td>
+		<td>uint16_t</td>
+		<td>A flag indicating the type of image. 1 = retina_resource, 2 = legacy_resource, 3 = pdf</td>
+	</tr>
+	<tr style="text-align: center">
+		<td>2</td>
+		<td>2</td>
+		<td>uint16_t</td>
+		<td>Amount of representations for the file.</td>
+	</tr>
+	<tr style="text-align: center">
+		<td>4</td>
+		<td>4</td>
+		<td>uint32_t</td>
+		<td><b>Dropped in 10.8</b>: Unknown. Seems to be skipped over. Also, in the case of PDFs, it is the pdf data length - 47.</td>
+	</tr>
+	<tr style="text-align: center">
+		<td>8</td>
+		<td>4</td>
+		<td>uint32_t</td>
+		<td><b>Dropped in 10.8</b>: Sum of each image's data length.</td>
+	</tr>
+	<tr style="text-align: center">
+		<td>12/4</td>
+		<td>…</td>
+		<td>…</td>
+		<td>List of image headers. The amount listed has been specified already.</td>
+	</tr>
+</table>
+
+### Image header
+
+12-byte image header. Contains details required to access the image data and make sense of it.
+
+<table>
+	<tr>
+		<th>Offset</th>
+		<th>Size</th>
+		<th>Type</th>
+		<th>Purpose</th>
+	</tr>
+	<tr style="text-align: center">
+		<td>0</td>
+		<td>2</td>
+		<td>uint16_t</td>
+		<td>Width of the image in pixels.</td>
+	</tr>
+	<tr style="text-align: center">
+		<td>2</td>
+		<td>2</td>
+		<td>uint16_t</td>
+		<td>Height of the image in pixels.</td>
+	</tr>
+	<tr style="text-align: center">
+		<td>4</td>
+		<td>4</td>
+		<td>uint32_t</td>
+		<td>Length of the image data.</td>
+	</tr>
+	<tr style="text-align: center">
+		<td>8</td>
+		<td>4</td>
+		<td>uint32_t</td>
+		<td>Offset of the image data. This value is relative to the master offset specified in the beginning of the file.</td>
+	</tr>
+</table>
+
+### File Data
+
+All file data (except PDFs) is raw Unpremultiplied ARGB in little-endian (BGRA, bytes go backwards). The last representation is usually (so far always) the retina image with double resolution.
+
+### PDFs
+
+PDFs have a type of 3 (specified in the file descriptor). Their first file data (listed first for the file headers) is always regular PDF data. All PDFs have 3 representations: PDF, legacy image, retina image. There are representations for both sizes always coming with a PDF so that it can be displayed onscreen quickly without interpolation. The file header for PDFs shows its desired bounds size.
+
 
 License
 ===================================
 SArtFileTool is license under the [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-nc-sa/3.0/ "Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License") because I would prefer people not make commercial applications based off of this code. The theming community is supposed to be open and as the name implies: A community.
 
-Credit should be made up to [Alex Zielenski](http://alexzielenski.com) and [Indragie Karunaratne](http://indragie.com)
+Credit should be made up to [Alex Zielenski](http://alexzielenski.com).
