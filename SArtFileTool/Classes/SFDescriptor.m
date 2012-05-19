@@ -146,7 +146,6 @@
     [headerData appendBytes:&count length:sizeof(count)];
     
     if (self.header.sartFile.minorOSVersion <= 7) { // Gone in 10.8
-    
         [headerData appendBytes:&unknown2 length:sizeof(unknown2)];
         [headerData appendBytes:&totalSize length:sizeof(totalSize)];
     
@@ -159,7 +158,9 @@
 
 - (NSUInteger)expectedLength
 {
-    return 12 + 12 * self.fileHeaders.count;
+    if (self.header.sartFile.minorOSVersion <= 7)
+        return 12 + 12 * self.fileHeaders.count;
+    return 4 + 12 * self.fileHeaders.count;
 }
 
 - (void)addFileAtURL:(NSURL *)url
