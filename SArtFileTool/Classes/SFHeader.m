@@ -78,6 +78,8 @@
         NSFileManager *manager = [NSFileManager defaultManager];
         BOOL exists, isDir;
         
+        _sartFile = file;
+        
         exists = [manager fileExistsAtPath:url.path isDirectory:&isDir];
         
         if (!exists || !isDir) {
