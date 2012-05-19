@@ -6,6 +6,42 @@ You can find the ArtFile.bin counterpart [here!](https://github.com/alexzielensk
 
 In the recent update I refactored the code to be more object oriented for easy "plug and play" for Cocoa applications. They can now internally alter the SArtFile.bin contents without writing to disk right away. Also, the new version supports the encoding of SArtFiles without the help of the originally encoded one – it creates all the data itself.
 
+Usage
+===
+The tool is pretty straightforward to use. Specify -e or -d for encode or decode, respectively. Optionally, you can specify the operating system for the file being decoded/encoded using the -os option with an argument. (e.g. `-os 10.7.4`).
+
+The tool has a few new features that would be helpful to the end-user:
+<ol>
+	<li>When decoding, not specifying a SArtFile.bin decode causes the tool to automatically pull the one installed on your system at <code>/System/Library/PrivateFrameworks/CoreUI.framework/Resources/SArtFile.bin</code>.
+	<li>The encoding part of the tool no longer needs the originally decoded SArtFile.bin to create a new one from the specified folder.
+	<li>Better exception/error catching</li>
+	<li><code>-os</code> option is not longer required. The tool will use the version installed on your system if none is specified</li>
+</ol>
+
+To decode the SArtFile.bin installed on your system to a folder called `sartFiles`:
+
+```
+$ cd path/To/sartFileTool/Directory
+$ ./sartFileTool -d sartFiles
+```
+
+The tool would decode the installed SArtFile.bin into a directory called `sartFiles` using the current Mac OS X version.
+
+To encode this directory back into a SArtFile.bin after making changes to it:
+
+```
+$ ./sartFileTool -e sartFiles SArtFile.new.bin
+```
+
+Changes to structure
+===
+
+Previous versions of SArtFileTool had images with @2x or pdfs and such. This version does not. Instead, each file follows this format: `fileIndex-imageIndex`; where the fileIndex is the 0-based index the file lies within the SArtFile.bin, and the imageIndex is the 1-based index where the image lies within its file.
+
+For example, for a PNG file with a retina resource at index 0, the legacy image would be at 0-1, and the retina image would be at 0-2. This new format calls for more organization within the SArtFile.bin and makes it more future proof.
+
+In addition to the new naming structure, each decoded folder now gets a file called `_receipt.plist`. This receipt contains some information that the encoder might need to know about the folder like the OS of the decoded file.
+
 Specification
 ===
 The SArtFile.bin is composed of four key components:
