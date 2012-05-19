@@ -147,6 +147,8 @@ This format is very different on 10.8. I noticed 516 bytes of trash that I could
 	</tr>
 </table>
 
+***If anyone could shed some light on this it would be greatly appreciated. The data in question is in range 1400-2220 on 10.7.4's SArtFile.bin***
+
 ### Descriptor
 
 12-byte header for a file. Each descriptor can contain multiple sub-image representations. It also contains a flag to indicate its type/purpose.
