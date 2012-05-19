@@ -35,16 +35,18 @@
 @synthesize descriptors  = _descriptors;
 @synthesize sartFile     = _sartFile;
 
-+ (SFHeader *)headerWithData:(NSData *)data
++ (SFHeader *)headerWithData:(NSData *)data file:(SArtFile *)file
 {
-    return [[[self alloc] initWithData:data] autorelease];
+    return [[[self alloc] initWithData:data file:file] autorelease];
 }
 
-- (id)initWithData:(NSData *)data
+- (id)initWithData:(NSData *)data file:(SArtFile *)file
 {
     if ((self = [self init])) {
         if (![_descriptors isKindOfClass:[NSMutableArray class]])
             _descriptors = [[NSMutableArray array] retain];
+        
+        _sartFile = file;
         
         data.currentOffset = 0;
 
@@ -52,14 +54,14 @@
         _fileCount    = [data nextShort];
         _masterOffset = [data nextInt];
         
+        
         NSMutableArray *descriptors = (NSMutableArray *)_descriptors;
 
         for (int x = 0; x < _fileCount; x++) {
             
             uint32_t headerOffset = [data intAtOffset:8 + sizeof(uint32_t) * x];
-            
             data.currentOffset = headerOffset;
-            
+                        
             SFDescriptor *descriptor = [SFDescriptor descriptorWithData:data header:self];
             [descriptors addObject:descriptor];
         }

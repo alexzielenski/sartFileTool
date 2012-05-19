@@ -37,8 +37,8 @@
 @property (nonatomic, assign) SArtFile *sartFile;
 
 // Pass the entire file's data
-+ (SFHeader *)headerWithData:(NSData *)data;
-- (id)initWithData:(NSData *)data;
++ (SFHeader *)headerWithData:(NSData *)data file:(SArtFile *)file;
+- (id)initWithData:(NSData *)data file:(SArtFile *)file;
 
 + (SFHeader *)headerWithFolderURL:(NSURL *)url file:(SArtFile *)file;
 - (id)initWithFolderURL:(NSURL *)url file:(SArtFile *)file;

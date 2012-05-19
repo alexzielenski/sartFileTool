@@ -50,7 +50,14 @@
 {
     if ((self = [self init])) {
         NSData *fileData = [NSData dataWithContentsOfURL:url];
-        _header  = [[SFHeader headerWithData:fileData] retain];
+        
+        if (!fileData) {
+            NSLog(@"No data");
+            [self release];
+            return nil;
+        }
+        
+        _header  = [[SFHeader headerWithData:fileData file:self] retain];
         _header.sartFile = self;
         
         [self generateBuffersFromData:fileData];
@@ -72,16 +79,21 @@
     }
     
     if ((self = [self init])) {
-        
+                
         _majorOSVersion  = major;
         _minorOSVersion  = minor;
         _bugFixOSVersion = bugFix;
         
         NSData *fileData = [NSData dataWithContentsOfURL:url];
         
-        _header = [[SFHeader headerWithData:fileData] retain];
-        _header.sartFile = self;
+        if (!fileData) {
+            NSLog(@"No data");
+            [self release];
+            return nil;
+        }
         
+        _header = [[SFHeader headerWithData:fileData file:self] retain];
+        _header.sartFile = self;
         
         [self generateBuffersFromData:fileData];
     }

@@ -47,11 +47,12 @@ int main (int argc, const char * argv[])
     int bugFixOS = 0;
 
 	int startIdx = 0;
+        
 	for (int x = 1; x < argc; x++) {
 		if ((!strcmp(argv[x], "-os"))) {
-            NSString *os = [NSString stringWithUTF8String:argv[x]];
+            NSString *os = [NSString stringWithUTF8String:argv[x + 1]];
             NSArray *delimited = [os componentsSeparatedByString:@"."];
-            
+                        
             for (int idx = 0; idx < delimited.count; idx++) {
                 NSNumber *num = [delimited objectAtIndex:idx];
                 int vers = num.intValue;
@@ -77,12 +78,11 @@ int main (int argc, const char * argv[])
             return 1;
             break;
         } else if ((!strcmp(argv[x], "-pdf"))) { // hidden option
-            
-            pdf = YES;
-            
+            pdf = YES;   
+            continue;
 		} else {
-			startIdx = x;
-			break;
+			startIdx = x - 1;
+			continue;
 		}
 	}
     

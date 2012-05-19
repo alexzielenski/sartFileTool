@@ -58,8 +58,10 @@
         
         _type              = (SFDescriptorType)[data nextShort];
         uint16_t fileCount = [data nextShort];
-        
-        data.currentOffset += 8; // Skip unknown 2 and 3 on ML
+                
+        if (_header.sartFile.minorOSVersion <= 7) {
+            data.currentOffset += 8; // Skip unknown 2 and 3 on ML
+        }
         
         for (int x = 0; x < fileCount; x++) {
             // Length of file headers is 12
