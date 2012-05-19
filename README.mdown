@@ -44,11 +44,12 @@ In addition to the new naming structure, each decoded folder now gets a file cal
 
 Specification
 ===
-The SArtFile.bin is composed of four key components:
+The SArtFile.bin is composed of five key components:
 
 <ul> 
 <li>Master Header</li>
 <li>Descriptor Offsets</li>
+<li><b>In Progress</b>: Unknown</li>
 <li>Descriptors</li>
 <li>File Data</li>
 </ul>
@@ -87,6 +88,60 @@ First 8 bytes of the SArtFile.bin. Gives some key information about the file.
 		<td>…</td>
 		<td>uint32_t</td>
 		<td>4 * fileCount size. A list of offsets to each file descriptor.</td>
+	</tr>
+</table>
+
+### Unknown
+
+I recently found this new sector of 820 bytes (816 under 10.8). It is a very odd area. I investigated this under 10.7.4. They seem to be in 8 byte groupings in this format:
+
+***Format on 10.7.4***
+
+<table>
+	<tr>
+		<th>Offset</th>
+		<th>Size</th>
+		<th>Type</th>
+		<th>Purpose</th>
+	</tr>
+	<tr style="text-align: center">
+		<td>0</td>
+		<td>2</td>
+		<td>uint16_t</td>
+		<td>Appears to be an offset to file data</td>
+	</tr>
+	<tr style="text-align: center">
+		<td>2</td>
+		<td>2</td>
+		<td>uint16_t</td>
+		<td>Looks like a Mac OS X version number. I have seen this to be 1073 and 1074 so far.</td>
+	</tr>
+	<tr style="text-align: center">
+		<td>4</td>
+		<td>4</td>
+		<td>uint32_t</td>
+		<td>So far only a 1</td>
+	</tr>
+</table>
+
+This is very uneven, it ents with an offset/version grouping and ends with an offset/version grouping so there are 4 bytes of 1 missing.
+
+***Format on 10.8***
+
+This format is very different on 10.8. I noticed 516 bytes of trash that I couldn't make out and afterwards it follows a similar pattern.
+
+<table>
+	<tr>
+		<th>Offset</th>
+		<th>Size</th>
+		<th>Type</th>
+		<th>Purpose</th>
+	</tr>
+	<tr style="text-align: center">
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
 	</tr>
 </table>
 
