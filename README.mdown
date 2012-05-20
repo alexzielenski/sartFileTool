@@ -130,7 +130,7 @@ This is very uneven, it ents with an offset/version grouping and ends with an of
 
 ***Format on 10.8***
 
-This format is very different on 10.8. I noticed 516 bytes of trash that I couldn't make out and afterwards it follows a similar pattern.
+On the latest build of 10.8, the format is fairly similar. There did seem to be build numbers instead of MacOSX versions for the second short. Also, it seems that the 32bit "1" comes first on here. I don't know if I was mistaken on Lion.
 
 <table>
 	<tr>
@@ -140,10 +140,22 @@ This format is very different on 10.8. I noticed 516 bytes of trash that I could
 		<th>Purpose</th>
 	</tr>
 	<tr style="text-align: center">
-		<td></td>
-		<td></td>
-		<td></td>
-		<td></td>
+		<td>0</td>
+		<td>4</td>
+		<td>uint32_t</td>
+		<td>So far only a 1</td>
+	</tr>
+	<tr style="text-align: center">
+		<td>2</td>
+		<td>2</td>
+		<td>uint16_t</td>
+		<td>Looks like an offset to something.</td>
+	</tr>
+	<tr style="text-align: center">
+		<td>4</td>
+		<td>2</td>
+		<td>uint16_t</td>
+		<td>Build number?</td>
 	</tr>
 </table>
 
