@@ -144,7 +144,7 @@
             [desc addFileAtURL:fullPath];
         }
         
-        _fileCount = _descriptors.count;
+        _fileCount = (uint16_t)_descriptors.count;
     }
     
     return self;
@@ -188,7 +188,7 @@
     NSMutableData *fileData           = [NSMutableData data];
     
     for (SFDescriptor *desc in self.descriptors) {
-        uint32_t descOffset = CFSwapInt32HostToLittle(totalLength + descriptorHeaders.length);
+        uint32_t descOffset = CFSwapInt32HostToLittle((uint32_t)totalLength + (uint32_t)descriptorHeaders.length);
         
         [descriptorOffsets appendBytes:&descOffset length:sizeof(descOffset)];
         

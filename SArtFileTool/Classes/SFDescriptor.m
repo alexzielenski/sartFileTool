@@ -143,7 +143,7 @@
     }
     
     if (self.type == SFDescriptorTypePDF && self.fileHeaders.count > 0)
-        unknown2 = [[self.fileHeaders objectAtIndex:0] expectedRawContentSize] - 47; // Seems to be for PDFs
+        unknown2 = (uint32_t)[[self.fileHeaders objectAtIndex:0] expectedRawContentSize] - 47; // Seems to be for PDFs
     
     totalSize = CFSwapInt32HostToLittle(totalSize);
     unknown2  = CFSwapInt32HostToLittle(unknown2);

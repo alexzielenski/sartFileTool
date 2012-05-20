@@ -118,7 +118,7 @@
         _shouldWritePDFReps = [[receipt objectForKey:@"pdfsWritten"] boolValue];
         
         if ((_majorOSVersion != 10) || (_minorOSVersion <= 6)) {
-            NSLog(@"Unsupported SArtFile OS Version: %d.%d.%d", _majorOSVersion, _minorOSVersion, _bugFixOSVersion);
+            NSLog(@"Unsupported SArtFile OS Version: %ld.%ld.%ld", _majorOSVersion, _minorOSVersion, _bugFixOSVersion);
         }
         
         _header = [[SFHeader headerWithFolderURL:folderURL file:self] retain];
@@ -171,6 +171,16 @@
     [super dealloc];
 }
 
+- (NSData *)sartFileData
+{
+    return self.header.headerData;
+}
+
+- (NSArray *)allImageRepresentations
+{
+    return [self.header valueForKeyPath:@"descriptors.@unionOfArrays.fileHeaders.imageRepresentation"];
+}
+
 #pragma mark - Operations
 
 - (BOOL)saveToFileAtURL:(NSURL *)url error:(NSError **)error
@@ -193,9 +203,9 @@
     NSLog(@"Master Offset: %d", self.header.masterOffset);
     
     NSDictionary *receipt = [NSDictionary dictionaryWithObjectsAndKeys:
-                             [NSNumber numberWithInt:self.majorOSVersion], @"majorOS", 
-                             [NSNumber numberWithInt:self.minorOSVersion], @"minorOS", 
-                             [NSNumber numberWithInt:self.bugFixOSVersion], @"bugFixOS", 
+                             [NSNumber numberWithUnsignedInteger:self.majorOSVersion], @"majorOS",
+                             [NSNumber numberWithUnsignedInteger:self.minorOSVersion], @"minorOS",
+                             [NSNumber numberWithUnsignedInteger:self.bugFixOSVersion], @"bugFixOS",
                              [NSNumber numberWithBool:self.shouldWritePDFReps], @"pdfsWritten", 
                              self.buffer1, @"buffer1", nil];
     
@@ -207,13 +217,40 @@
     if (error) {
         return;
     }
+    BOOL writeProperties = NO;
+    
+#ifdef DEBUG
+    writeProperties = YES;
+#endif
+    
+	NSMutableArray *deb = (writeProperties) ? [NSMutableArray array] : nil;
     
     for (SFDescriptor *descriptor in self.header.descriptors) {
         
+		NSMutableDictionary *fd = writeProperties ? [NSMutableDictionary dictionary] : nil;
+        
+        if (writeProperties) {
+            
+            [fd setObject:[NSNumber numberWithUnsignedShort:descriptor.type] forKey:@"type"];
+            [fd setObject:[NSNumber numberWithUnsignedShort:descriptor.fileHeaders.count] forKey:@"count"];
+		
+        }
+        
+		NSMutableArray *fh = writeProperties ? [NSMutableArray array] : nil;
+		
         NSUInteger index = [self.header.descriptors indexOfObject:descriptor];
         BOOL pdf = descriptor.type == SFDescriptorTypePDF;
                 
         for (SFFileHeader *header in descriptor.fileHeaders) {
+            if (writeProperties) {
+                [fh addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+                               [NSNumber numberWithUnsignedShort:header.width], @"width",
+                               [NSNumber numberWithUnsignedShort:header.height], @"height",
+                               [NSNumber numberWithUnsignedInt:header.length], @"length",
+                               [NSNumber numberWithUnsignedInt:header.offset], @"offset",
+                               [NSNumber numberWithUnsignedInt:self.header.masterOffset + header.offset], @"finalOffset", nil]];
+            }
+			
             NSInteger item = [descriptor.fileHeaders indexOfObject:header] + 1;
             
             if (!self.shouldWritePDFReps && item > 1 && pdf)
@@ -221,13 +258,20 @@
             
             NSString *extension = (pdf && item == 1) ? @"pdf" : @"png";
             
-            NSString *fileName = [[NSString stringWithFormat:@"%d-%d", index, item] stringByAppendingPathExtension:extension];
+            NSString *fileName = [[NSString stringWithFormat:@"%ld-%ld", index, item] stringByAppendingPathExtension:extension];
             [header.imageData writeToURL:[folderURL URLByAppendingPathComponent:fileName] atomically:NO];
-            
+        }
+        
+        if (writeProperties) {
+            [fd setObject:fh forKey:@"headers"];
+            [deb addObject:fd];
         }
         
         NSLog(@"Decoded index %lu", index);
     }
+	
+    if (writeProperties)
+        [deb writeToFile:[@"~/Desktop/debug.plist" stringByExpandingTildeInPath] atomically:NO];
     
     [receipt writeToURL:[folderURL URLByAppendingPathComponent:@"_receipt.plist"] atomically:NO];
 }

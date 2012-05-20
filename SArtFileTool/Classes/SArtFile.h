@@ -36,9 +36,9 @@
 
 // Options
 @property (nonatomic, assign) BOOL shouldWritePDFReps;
-@property (nonatomic, assign) int  majorOSVersion;
-@property (nonatomic, assign) int  minorOSVersion;
-@property (nonatomic, assign) int  bugFixOSVersion;
+@property (nonatomic, assign) NSUInteger  majorOSVersion;
+@property (nonatomic, assign) NSUInteger  minorOSVersion;
+@property (nonatomic, assign) NSUInteger  bugFixOSVersion;
 
 /*! Creation */
 
@@ -62,5 +62,8 @@
 - (void)decodeToFolderAtURL:(NSURL *)folderURL error:(NSError **)error;
 
 + (NSURL *)sArtFilePath;
+
+- (NSData *)sartFileData;             // Final SArtFile data
+- (NSArray *)allImageRepresentations; // Array of NSImageRep subclasses
 
 @end

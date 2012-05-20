@@ -119,6 +119,7 @@ int main (int argc, const char * argv[])
                                            majorOS:majorOS 
                                            minorOS:minorOS
                                           bugFixOS:bugFixOS];
+                        
             file.shouldWritePDFReps = pdf;
             
             [file decodeToFolderAtURL:[NSURL fileURLWithPath:path2] error:nil];

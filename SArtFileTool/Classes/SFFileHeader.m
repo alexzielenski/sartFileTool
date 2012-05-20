@@ -111,7 +111,7 @@
     
     uint16_t width  = CFSwapInt16HostToLittle(self.width);
     uint16_t height = CFSwapInt16HostToLittle(self.height);
-    uint32_t length = CFSwapInt32HostToLittle(self.expectedRawContentSize);
+    uint32_t length = CFSwapInt32HostToLittle((uint32_t)self.expectedRawContentSize);
     uint32_t offset = CFSwapInt32HostToLittle(self.offset);
     
     [data appendBytes:&width length:sizeof(uint16_t)];
