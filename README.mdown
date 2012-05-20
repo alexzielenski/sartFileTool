@@ -95,7 +95,7 @@ First 8 bytes of the SArtFile.bin. Gives some key information about the file.
 
 Currently, SArtFileTool copies this sector of bytes into the "buffer1" key of the receipt.
 
-I recently found this new sector of 820 bytes (816 under 10.8). It is a very odd area. I investigated this under 10.7.4. They seem to be in 8 byte groupings in this format:
+I recently found this new sector of 820 bytes (824 under 10.8). It is a very odd area. I investigated this under 10.7.4. They seem to be in 8 byte groupings in this format:
 
 ***Format on 10.7.4***
 
@@ -130,7 +130,7 @@ This is very uneven, it ents with an offset/version grouping and ends with an of
 
 ***Format on 10.8***
 
-On the latest build of 10.8, the format is fairly similar. There did seem to be build numbers instead of MacOSX versions for the second short. Also, it seems that the 32bit "1" comes first on here. I don't know if I was mistaken on Lion.
+On the latest build of 10.8, the format is fairly similar. There did seem to be build numbers instead of MacOSX versions for the second short. Also, it seems that the 32bit "1" comes first on here. I don't know if I was mistaken on Lion. Also, the difference between each first short appears to be alternating between 416 and 384 with the occasional 368.
 
 <table>
 	<tr>
@@ -155,7 +155,57 @@ On the latest build of 10.8, the format is fairly similar. There did seem to be 
 		<td>4</td>
 		<td>2</td>
 		<td>uint16_t</td>
-		<td>Build number?</td>
+		<td>Build number? I've seen 1351, 1348, 1349</td>
+	</tr>
+</table>
+
+Here is some sample data:
+
+<table>
+	<tr>
+		<th>uint32</th>
+		<th>uint16</th>
+		<th>uint16</th>
+	</tr>
+	<tr style="text-align: center">
+		<td>1</td>
+		<td>7376</td>
+		<td>1351</td>	
+	</tr>
+	<tr style="text-align: center">
+		<td>1</td>
+		<td>7760</td>
+		<td>1351</td>	
+	</tr>
+	<tr style="text-align: center">
+		<td>1</td>
+		<td>8176</td>
+		<td>1351</td>	
+	</tr>
+	<tr style="text-align: center">
+		<td>1</td>
+		<td>8560</td>
+		<td>1351</td>	
+	</tr>
+	<tr style="text-align: center">
+		<td>1</td>
+		<td>8976</td>
+		<td>1351</td>	
+	</tr>
+	<tr style="text-align: center">
+		<td>1</td>
+		<td>9360</td>
+		<td>1351</td>	
+	</tr>
+	<tr style="text-align: center">
+		<td>1</td>
+		<td>9776</td>
+		<td>1351</td>	
+	</tr>
+	<tr style="text-align: center">
+		<td>1</td>
+		<td>10144</td>
+		<td>1351</td>	
 	</tr>
 </table>
 
