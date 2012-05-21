@@ -70,11 +70,9 @@
         // Get the size
         Class repClass = ([url.pathExtension.lowercaseString isEqualToString:@"pdf"]) ? [NSPDFImageRep class] : [NSBitmapImageRep class];
         NSImageRep *imageInstance = [[[repClass alloc] initWithData:data] autorelease];
-                
-        self.width  = (uint16_t)imageInstance.pixelsWide;
-        self.height = (uint16_t)imageInstance.pixelsHigh;
 
-        
+		self.width  = (uint16_t)imageInstance.pixelsWide;
+		self.height = (uint16_t)imageInstance.pixelsHigh;
     }
     
     return self;
@@ -113,7 +111,7 @@
     uint16_t height = CFSwapInt16HostToLittle(self.height);
     uint32_t length = CFSwapInt32HostToLittle((uint32_t)self.expectedRawContentSize);
     uint32_t offset = CFSwapInt32HostToLittle(self.offset);
-    
+	    
     [data appendBytes:&width length:sizeof(uint16_t)];
     [data appendBytes:&height length:sizeof(uint16_t)];
     [data appendBytes:&length length:sizeof(uint32_t)];

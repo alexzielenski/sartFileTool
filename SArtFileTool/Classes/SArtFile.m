@@ -80,9 +80,9 @@
     
     if ((self = [self init])) {
                 
-        _majorOSVersion  = major;
-        _minorOSVersion  = minor;
-        _bugFixOSVersion = bugFix;
+        _majorOSVersion  = (int)major;
+        _minorOSVersion  = (int)minor;
+        _bugFixOSVersion = (int)bugFix;
         
         NSData *fileData = [NSData dataWithContentsOfURL:url];
         
@@ -256,7 +256,7 @@
             if (!self.shouldWritePDFReps && item > 1 && pdf)
                 continue;
             
-            NSString *extension = (pdf && item == 1) ? @"pdf" : @"png";
+            NSString *extension = (pdf && item == 1) ? @"pdf" : (descriptor.type == SFDescriptorTypeTIF) ?  @"tif" : @"png";
             
             NSString *fileName = [[NSString stringWithFormat:@"%ld-%ld", index, item] stringByAppendingPathExtension:extension];
             [header.imageData writeToURL:[folderURL URLByAppendingPathComponent:fileName] atomically:NO];

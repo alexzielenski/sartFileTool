@@ -26,3 +26,12 @@
 - (uint64_t)longAtOffset:(NSUInteger)offset;
 
 @end
+
+@interface NSMutableData (ByteAdditions)
+
+- (void)appendByte:(uint8_t)value;
+- (void)appendShort:(uint16_t)value;
+- (void)appendInt:(uint32_t)value;
+- (void)appendLong:(uint64_t)value;
+
+@end

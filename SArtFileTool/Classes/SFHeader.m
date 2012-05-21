@@ -57,11 +57,10 @@
         
         NSMutableArray *descriptors = (NSMutableArray *)_descriptors;
 
-        for (int x = 0; x < _fileCount; x++) {
-            
+        for (int x = 0; x < _fileCount; x++) {			
             uint32_t headerOffset = [data intAtOffset:8 + sizeof(uint32_t) * x];
+
             data.currentOffset = headerOffset;
-                        
             SFDescriptor *descriptor = [SFDescriptor descriptorWithData:data header:self];
             [descriptors addObject:descriptor];
         }
@@ -119,7 +118,6 @@
         for (NSString *fileName in contents) {
             if ([fileName isEqualToString:@"_receipt.plist"])
                 continue;
-            
             if (fileName.length <= 2) // At least 3 characters long
                 continue;
             
@@ -138,6 +136,7 @@
             } else {                
                 desc = [SFDescriptor descriptor];
                 desc.header = self;
+				
                 [self.descriptors addObject:desc];
             }
             
@@ -187,6 +186,7 @@
     NSMutableData *descriptorHeaders  = [NSMutableData data];
     NSMutableData *fileData           = [NSMutableData data];
     
+	uint32_t index = 0;
     for (SFDescriptor *desc in self.descriptors) {
         uint32_t descOffset = CFSwapInt32HostToLittle((uint32_t)totalLength + (uint32_t)descriptorHeaders.length);
         
@@ -197,12 +197,21 @@
             fileHeader.offset = fileData.length;
             
             [fileData appendData:fileHeader.sartFileData];
-        }
-        
-        [descriptorHeaders appendData:desc.headerData];  
-        NSLog(@"Encoded index: %lu", [self.descriptors indexOfObject:desc]);
+			
+			char padding = 4 - (fileData.length % 4);
+			
+			if (padding !=4) {
+				char nl = 0;
+				for (char x = 0; x < padding; x++)
+					[fileData appendBytes:&nl length:1];
+			}
+		}
+		
+        [descriptorHeaders appendData:desc.headerData];
+        NSLog(@"Encoded index: %i", index);
+		index++;
     }
-    
+	
     
     [headerData appendBytes:&version length:sizeof(uint16_t)];
     [headerData appendBytes:&count length:sizeof(uint16_t)];

@@ -55,7 +55,7 @@
             _fileHeaders = [[NSMutableArray array] retain];
         
         NSMutableArray *fileHeaders = (NSMutableArray *)_fileHeaders;
-        
+		
         _type              = (SFDescriptorType)[data nextShort];
         uint16_t fileCount = [data nextShort];
                 
@@ -74,10 +74,9 @@
             NSData *imageData = [data subdataWithRange:NSMakeRange(_header.masterOffset + header.offset, header.length)];
             
             // the first image in PDFs is not raw
-            if (self.type == SFDescriptorTypePDF && x == 0) {
-                
+            if (self.type == SFDescriptorTypePDF && x == 0) {				
                 header.imageData = imageData;
-                
+				
             } else {
                 // Process the data to be PNG
                 CGDataProviderRef provider = CGDataProviderCreateWithCFData((CFDataRef)imageData);
@@ -114,7 +113,7 @@
 {
     if ((self = [super init])) {
         _fileHeaders = [[NSMutableArray array] retain];
-        _type        = SFDescriptorTypePNG;
+        _type        = 0;
     }
     
     return self;
@@ -175,82 +174,121 @@
     
     if ([fileName.pathExtension isEqualToString:@"pdf"])
         self.type = SFDescriptorTypePDF;
-    
+	else if ([fileName.pathExtension isEqualToString:@"tif"] && self.type == 0)
+		self.type = SFDescriptorTypeTIF;
+	else if (self.type == 0)
+		self.type = SFDescriptorTypePNG;
+	
     SFFileHeader *header = [SFFileHeader fileHeaderWithContentsOfURL:url];
     
     if (self.type == SFDescriptorTypePDF && self.fileHeaders.count == 0)
         header.imageClass = [NSPDFImageRep class];
     
     [self.fileHeaders addObject:header];
-    
-    if (self.fileHeaders.count > 1 && self.type == SFDescriptorTypePNG)
-        self.type = SFDescriptorTypeHiDPIPNG;
-    
-    // If the PDF's cache images weren't written, write them out homes.
-    if (!self.header.sartFile.shouldWritePDFReps && self.type == SFDescriptorTypePDF && self.fileHeaders.count == 1) {        
-        NSPDFImageRep *rep = (NSPDFImageRep *)header.imageRepresentation;
-        
-        NSBitmapImageRep *legacy = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:NULL 
-                                                                           pixelsWide:rep.pixelsWide 
-                                                                           pixelsHigh:rep.pixelsHigh 
-                                                                        bitsPerSample:8 
-                                                                      samplesPerPixel:4
-                                                                             hasAlpha:YES 
-                                                                             isPlanar:NO 
-                                                                       colorSpaceName:NSCalibratedRGBColorSpace 
-                                                                         bitmapFormat:NSAlphaFirstBitmapFormat
-                                                                          bytesPerRow:4 * rep.pixelsWide 
-                                                                         bitsPerPixel:32];
-        NSGraphicsContext *ctx = [NSGraphicsContext graphicsContextWithBitmapImageRep:legacy];
-        [NSGraphicsContext saveGraphicsState];
-        [NSGraphicsContext setCurrentContext:ctx];
-        
-        [rep drawInRect:rep.bounds];
+	
+	if (self.type == SFDescriptorTypePDF) {
+		
+		// NSPDFImageRep has inaccurate dimension calculation. Let's do it ourselves.
+		CGPDFDocumentRef pdf = CGPDFDocumentCreateWithURL((CFURLRef)url);
+		CGPDFPageRef page = CGPDFDocumentGetPage(pdf, 1);
+		
+		CGRect bounds = CGPDFPageGetBoxRect(page, kCGPDFMediaBox);
+		
+		header.width  = (uint16_t)round(bounds.size.width);
+		header.height = (uint16_t)round(bounds.size.height);
+		
+		bounds.size.width  = header.width;
+		bounds.size.height = header.height;
+		
+		// If the PDF's cache images weren't written, write them out homes.
+		if (!self.header.sartFile.shouldWritePDFReps && self.fileHeaders.count == 1) {        
+			
+			NSBitmapImageRep *legacy = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:NULL 
+																			   pixelsWide:bounds.size.width
+																			   pixelsHigh:bounds.size.height
+																			bitsPerSample:8 
+																		  samplesPerPixel:4
+																				 hasAlpha:YES 
+																				 isPlanar:NO 
+																		   colorSpaceName:NSCalibratedRGBColorSpace 
+																			 bitmapFormat:NSAlphaFirstBitmapFormat
+																			  bytesPerRow:4 * bounds.size.width
+																			 bitsPerPixel:32];
+			NSGraphicsContext *ctx = [NSGraphicsContext graphicsContextWithBitmapImageRep:legacy];
+			CGContextRef context = [ctx graphicsPort];
+			
+			[NSGraphicsContext saveGraphicsState];
+			[NSGraphicsContext setCurrentContext:ctx];
+			[ctx setShouldAntialias:NO];
+//			CGContextTranslateCTM(context, 0.0, bounds.size.height);
+			CGContextScaleCTM(context, 1.0, 1.0);
+			
+			// Grab the first PDF page
+			CGPDFPageRef page = CGPDFDocumentGetPage(pdf, 1);
+			
+			// CGPDFPageGetDrawingTransform provides an easy way to get the transform for a PDF page. It will scale down to fit, including any
+			// base rotations necessary to display the PDF page correctly. 
+			CGAffineTransform pdfTransform = CGPDFPageGetDrawingTransform(page, kCGPDFMediaBox, bounds, 0, true);
+			
+			// And apply the transform.
+			CGContextConcatCTM(context, pdfTransform);
+			
+			// Finally, we draw the page and restore the graphics state for further manipulations!
+			CGContextDrawPDFPage(context, page);
+			
+			[NSGraphicsContext restoreGraphicsState];
+			
+			
+			NSBitmapImageRep *retina = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:NULL
+																			   pixelsWide:bounds.size.width * 2
+																			   pixelsHigh:bounds.size.height * 2
+																			bitsPerSample:8
+																		  samplesPerPixel:4
+																				 hasAlpha:YES 
+																				 isPlanar:NO 
+																		   colorSpaceName:NSCalibratedRGBColorSpace 
+																			 bitmapFormat:NSAlphaFirstBitmapFormat
+																			  bytesPerRow:4 * bounds.size.width * 2
+																			 bitsPerPixel:32];
+			ctx = [NSGraphicsContext graphicsContextWithBitmapImageRep:retina];
+			context = [ctx graphicsPort];
+			
+			[NSGraphicsContext saveGraphicsState];
+			[NSGraphicsContext setCurrentContext:ctx];
+			[ctx setShouldAntialias:NO];
+			
+//			CGContextTranslateCTM(context, 0.0, bounds.size.height * 2);
+			CGContextScaleCTM(context, 2.0, 2.0);
+			
+			// CGPDFPageGetDrawingTransform provides an easy way to get the transform for a PDF page. It will scale down to fit, including any
+			// base rotations necessary to display the PDF page correctly. 
+			pdfTransform = CGPDFPageGetDrawingTransform(page, kCGPDFMediaBox, bounds, 0, true);
 
-        [NSGraphicsContext restoreGraphicsState];
-        
-
-        
-        NSBitmapImageRep *retina = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:NULL 
-                                                                           pixelsWide:rep.pixelsWide * 2
-                                                                           pixelsHigh:rep.pixelsHigh * 2
-                                                                        bitsPerSample:8 
-                                                                      samplesPerPixel:4
-                                                                             hasAlpha:YES 
-                                                                             isPlanar:NO 
-                                                                       colorSpaceName:NSCalibratedRGBColorSpace 
-                                                                         bitmapFormat:NSAlphaFirstBitmapFormat
-                                                                          bytesPerRow:4 * rep.pixelsWide * 2
-                                                                         bitsPerPixel:32];
-        ctx = [NSGraphicsContext graphicsContextWithBitmapImageRep:retina];
-        [NSGraphicsContext saveGraphicsState];
-        [NSGraphicsContext setCurrentContext:ctx];
-        
-        [rep drawInRect:NSMakeRect(0, 0, rep.pixelsWide * 2, rep.pixelsHigh * 2) 
-               fromRect:NSZeroRect 
-              operation:NSCompositeSourceOver 
-               fraction:1.0 
-         respectFlipped:YES 
-                  hints:nil];
-        
-        [NSGraphicsContext restoreGraphicsState];
-        
-        SFFileHeader *legacyHeader = [[[SFFileHeader alloc] init] autorelease];
-        SFFileHeader *retinaHeader = [[[SFFileHeader alloc] init] autorelease];
-        
-        legacyHeader.imageData = [legacy representationUsingType:NSPNGFileType properties:nil];
-        legacyHeader.width     = legacy.pixelsWide;
-        legacyHeader.height    = legacy.pixelsHigh;
-                
-        retinaHeader.imageData = [retina representationUsingType:NSPNGFileType properties:nil];
-        retinaHeader.width     = retina.pixelsWide;
-        retinaHeader.height    = retina.pixelsHigh;
-        
-        [self.fileHeaders addObject:legacyHeader];
-        [self.fileHeaders addObject:retinaHeader];
-        
-    }
-    
+			// And apply the transform.
+			CGContextConcatCTM(context, pdfTransform);
+			
+			// Finally, we draw the page and restore the graphics state for further manipulations!
+			CGContextDrawPDFPage(context, page);
+			
+			[NSGraphicsContext restoreGraphicsState];
+			
+			SFFileHeader *legacyHeader = [[[SFFileHeader alloc] init] autorelease];
+			SFFileHeader *retinaHeader = [[[SFFileHeader alloc] init] autorelease];
+			
+			legacyHeader.imageData = [legacy representationUsingType:NSPNGFileType properties:nil];
+			legacyHeader.width     = legacy.pixelsWide;
+			legacyHeader.height    = legacy.pixelsHigh;
+			
+			retinaHeader.imageData = [retina representationUsingType:NSPNGFileType properties:nil];
+			retinaHeader.width     = retina.pixelsWide;
+			retinaHeader.height    = retina.pixelsHigh;
+			
+			[self.fileHeaders addObject:legacyHeader];
+			[self.fileHeaders addObject:retinaHeader];
+			
+		}
+		CGPDFDocumentRelease(pdf);
+	}
 }
 
 @end

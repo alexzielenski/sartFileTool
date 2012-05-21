@@ -30,8 +30,8 @@
 @class SFHeader;
 
 typedef enum {
-    SFDescriptorTypeHiDPIPNG = 1,
-    SFDescriptorTypePNG      = 2,
+    SFDescriptorTypePNG      = 1,
+    SFDescriptorTypeTIF      = 2,
     SFDescriptorTypePDF      = 3
 } SFDescriptorType;
 
