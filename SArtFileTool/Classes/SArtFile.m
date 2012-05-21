@@ -114,6 +114,7 @@
         _majorOSVersion     = [[receipt objectForKey:@"majorOS"] intValue];
         _minorOSVersion     = [[receipt objectForKey:@"minorOS"] intValue];
         _bugFixOSVersion    = [[receipt objectForKey:@"bugFixOS"] intValue];
+                
         _buffer1            = [[receipt objectForKey:@"buffer1"] retain];
         _shouldWritePDFReps = [[receipt objectForKey:@"pdfsWritten"] boolValue];
         

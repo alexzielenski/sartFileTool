@@ -137,8 +137,17 @@
                 desc = [SFDescriptor descriptor];
                 desc.header = self;
 				
+                if ([fileName.pathExtension isEqualToString:@"pdf"])
+                    desc.type = SFDescriptorTypePDF;
+                else if ([fileName.pathExtension isEqualToString:@"tif"])
+                    desc.type = SFDescriptorTypeTIF;
+                else
+                    desc.type = SFDescriptorTypePNG;
+                
                 [self.descriptors addObject:desc];
             }
+            
+            
             
             [desc addFileAtURL:fullPath];
         }

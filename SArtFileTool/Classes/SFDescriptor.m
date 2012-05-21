@@ -58,9 +58,9 @@
 		
         _type              = (SFDescriptorType)[data nextShort];
         uint16_t fileCount = [data nextShort];
-                
+
         if (_header.sartFile.minorOSVersion <= 7) {
-            data.currentOffset += 8; // Skip unknown 2 and 3 on ML
+            data.currentOffset += 8; // Skip unknown 2 and 3 on L
         }
         
         for (int x = 0; x < fileCount; x++) {
@@ -113,7 +113,7 @@
 {
     if ((self = [super init])) {
         _fileHeaders = [[NSMutableArray array] retain];
-        _type        = 0;
+        _type        = SFDescriptorTypePNG;
     }
     
     return self;
@@ -127,10 +127,11 @@
 
 - (NSData *)headerData
 {
-    NSMutableData *headerData = [NSMutableData dataWithCapacity:12];
+    NSUInteger length = self.expectedLength;
+    
+    NSMutableData *headerData = [NSMutableData dataWithCapacity:length - 4 * self.fileHeaders.count];
     NSMutableData *fileHeaderData = [NSMutableData dataWithCapacity:12 * self.fileHeaders.count];
     
-    uint32_t totalSize  = 0;
     uint32_t unknown2   = 0; // Yeah i don't know this yet. Luckily these two values are dropped in 10.8
     
     uint16_t type  = CFSwapInt16HostToLittle(self.type);
@@ -138,13 +139,12 @@
     
     for (SFFileHeader *header in self.fileHeaders) {
         [fileHeaderData appendData:header.headerData];
-        totalSize += header.expectedRawContentSize;
     }
     
     if (self.type == SFDescriptorTypePDF && self.fileHeaders.count > 0)
         unknown2 = (uint32_t)[[self.fileHeaders objectAtIndex:0] expectedRawContentSize] - 47; // Seems to be for PDFs
     
-    totalSize = CFSwapInt32HostToLittle(totalSize);
+    uint32_t totalSize = CFSwapInt32HostToLittle((uint32_t)fileHeaderData.length);
     unknown2  = CFSwapInt32HostToLittle(unknown2);
     
     [headerData appendBytes:&type length:sizeof(type)];
@@ -155,7 +155,7 @@
         [headerData appendBytes:&totalSize length:sizeof(totalSize)];
     
     }
-        
+    
     [headerData appendData:fileHeaderData];
     
     return headerData;
@@ -170,24 +170,14 @@
 
 - (void)addFileAtURL:(NSURL *)url
 {
-    NSString *fileName = url.lastPathComponent;
-    
-    if ([fileName.pathExtension isEqualToString:@"pdf"])
-        self.type = SFDescriptorTypePDF;
-	else if ([fileName.pathExtension isEqualToString:@"tif"] && self.type == 0)
-		self.type = SFDescriptorTypeTIF;
-	else if (self.type == 0)
-		self.type = SFDescriptorTypePNG;
-	
     SFFileHeader *header = [SFFileHeader fileHeaderWithContentsOfURL:url];
     
     if (self.type == SFDescriptorTypePDF && self.fileHeaders.count == 0)
         header.imageClass = [NSPDFImageRep class];
     
     [self.fileHeaders addObject:header];
-	
-	if (self.type == SFDescriptorTypePDF) {
-		
+
+	if (self.type == SFDescriptorTypePDF && self.fileHeaders.count == 1) { // only interpolate for the first item
 		// NSPDFImageRep has inaccurate dimension calculation. Let's do it ourselves.
 		CGPDFDocumentRef pdf = CGPDFDocumentCreateWithURL((CFURLRef)url);
 		CGPDFPageRef page = CGPDFDocumentGetPage(pdf, 1);
@@ -199,10 +189,9 @@
 		
 		bounds.size.width  = header.width;
 		bounds.size.height = header.height;
-		
+
 		// If the PDF's cache images weren't written, write them out homes.
 		if (!self.header.sartFile.shouldWritePDFReps && self.fileHeaders.count == 1) {        
-			
 			NSBitmapImageRep *legacy = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:NULL 
 																			   pixelsWide:bounds.size.width
 																			   pixelsHigh:bounds.size.height
@@ -220,7 +209,6 @@
 			[NSGraphicsContext saveGraphicsState];
 			[NSGraphicsContext setCurrentContext:ctx];
 			[ctx setShouldAntialias:NO];
-//			CGContextTranslateCTM(context, 0.0, bounds.size.height);
 			CGContextScaleCTM(context, 1.0, 1.0);
 			
 			// Grab the first PDF page
@@ -255,9 +243,7 @@
 			
 			[NSGraphicsContext saveGraphicsState];
 			[NSGraphicsContext setCurrentContext:ctx];
-			[ctx setShouldAntialias:NO];
-			
-//			CGContextTranslateCTM(context, 0.0, bounds.size.height * 2);
+			[ctx setShouldAntialias:NO];			
 			CGContextScaleCTM(context, 2.0, 2.0);
 			
 			// CGPDFPageGetDrawingTransform provides an easy way to get the transform for a PDF page. It will scale down to fit, including any

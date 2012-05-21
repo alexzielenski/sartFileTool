@@ -52,7 +52,7 @@ int main (int argc, const char * argv[])
 		if ((!strcmp(argv[x], "-os"))) {
             NSString *os = [NSString stringWithUTF8String:argv[x + 1]];
             NSArray *delimited = [os componentsSeparatedByString:@"."];
-                        
+            
             for (int idx = 0; idx < delimited.count; idx++) {
                 NSNumber *num = [delimited objectAtIndex:idx];
                 int vers = num.intValue;
@@ -88,26 +88,24 @@ int main (int argc, const char * argv[])
     
     NSString *path1 = nil, *path2 = nil;
     
-    if (argc -1 <= startIdx) {
-        
-        if (!encode) {
-            path1 = [[SArtFile sArtFilePath] path];
-            startIdx--;
-            
-        } else {
-            NSLog(@"Missing arguments");
-            printf(help, NULL);
-            return 1;
-        }
+    if (startIdx >= argc - 1) {
+        NSLog(@"Missing arguments");
+        printf(help, NULL);
+        return 1;
     }
     
-    if (!path1)
-        path1 = [NSString stringWithUTF8String:argv[startIdx]];
-    
-    path2 = [NSString stringWithUTF8String:argv[startIdx + 1]];
+    if (startIdx == argc - 2 && !encode) {
+        path1 = [[SArtFile sArtFilePath] path];
+        path2 = [NSString stringWithUTF8String:argv[startIdx+1]];
+    } else {        
+        if (!path1)
+            path1 = [NSString stringWithUTF8String:argv[startIdx]];
+        path2 = [NSString stringWithUTF8String:argv[startIdx + 1]];
+    }
     
     path1 = [path1 stringByExpandingTildeInPath];
     path2 = [path2 stringByExpandingTildeInPath];
+    
     
     @try {
         uint64_t start = mach_absolute_time();
