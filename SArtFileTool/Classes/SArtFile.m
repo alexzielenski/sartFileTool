@@ -117,7 +117,7 @@
                 
         _buffer1            = [[receipt objectForKey:@"buffer1"] retain];
         _shouldWritePDFReps = [[receipt objectForKey:@"pdfsWritten"] boolValue];
-        
+        NSLog(@"%d", _shouldWritePDFReps);
         if ((_majorOSVersion != 10) || (_minorOSVersion <= 6)) {
             NSLog(@"Unsupported SArtFile OS Version: %ld.%ld.%ld", _majorOSVersion, _minorOSVersion, _bugFixOSVersion);
         }

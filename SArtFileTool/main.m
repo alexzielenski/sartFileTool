@@ -45,14 +45,14 @@ int main (int argc, const char * argv[])
     int majorOS  = -1;
     int minorOS  = 0;
     int bugFixOS = 0;
-
+	
 	int startIdx = 0;
-        
+	
 	for (int x = 1; x < argc; x++) {
 		if ((!strcmp(argv[x], "-os"))) {
             NSString *os = [NSString stringWithUTF8String:argv[x + 1]];
             NSArray *delimited = [os componentsSeparatedByString:@"."];
-            
+			
             for (int idx = 0; idx < delimited.count; idx++) {
                 NSNumber *num = [delimited objectAtIndex:idx];
                 int vers = num.intValue;
@@ -65,7 +65,9 @@ int main (int argc, const char * argv[])
                     bugFixOS = vers;
                 
             }
-            
+			
+			// Skip over the OS option
+            x++;
 			continue;
 		} else if  ((!strcmp(argv[x], "-d"))) {
 			encode = NO;
@@ -81,35 +83,38 @@ int main (int argc, const char * argv[])
             pdf = YES;   
             continue;
 		} else {
-			startIdx = x - 1;
+			startIdx = x;
 			continue;
 		}
 	}
     
     NSString *path1 = nil, *path2 = nil;
     
-    if (startIdx >= argc - 1) {
+    if (argc <= startIdx) {
+		
         NSLog(@"Missing arguments");
-        printf(help, NULL);
-        return 1;
-    }
-    
-    if (startIdx == argc - 2 && !encode) {
-        path1 = [[SArtFile sArtFilePath] path];
-        path2 = [NSString stringWithUTF8String:argv[startIdx+1]];
-    } else {        
-        if (!path1)
-            path1 = [NSString stringWithUTF8String:argv[startIdx]];
-        path2 = [NSString stringWithUTF8String:argv[startIdx + 1]];
-    }
+		printf(help, NULL);
+		return 1;
+		
+	}
+	
+	if (startIdx == argc - 1) {
+		path1 = [[SArtFile sArtFilePath] path];
+		path2 = [NSString stringWithUTF8String:argv[startIdx]];
+	} else {
+		path1 = [NSString stringWithUTF8String:argv[startIdx]];
+		path2 = [NSString stringWithUTF8String:argv[startIdx + 1]];
+	}
+
     
     path1 = [path1 stringByExpandingTildeInPath];
     path2 = [path2 stringByExpandingTildeInPath];
     
-    
+	NSLog(@"%@, %@", path1, path2);
+	
     @try {
         uint64_t start = mach_absolute_time();
-       
+		
         
         SArtFile *file = nil;
         if (!encode) {
@@ -117,7 +122,7 @@ int main (int argc, const char * argv[])
                                            majorOS:majorOS 
                                            minorOS:minorOS
                                           bugFixOS:bugFixOS];
-                        
+			
             file.shouldWritePDFReps = pdf;
             
             [file decodeToFolderAtURL:[NSURL fileURLWithPath:path2] error:nil];
@@ -147,7 +152,7 @@ int main (int argc, const char * argv[])
     } @catch (NSException *e) {
         NSLog(@"Something bad happened: %@ : %@", e.name, e.reason);
     }
-        
+	
 	[pool drain];
     
     return 0;

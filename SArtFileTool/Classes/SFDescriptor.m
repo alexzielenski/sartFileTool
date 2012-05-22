@@ -58,9 +58,9 @@
 		
         _type              = (SFDescriptorType)[data nextShort];
         uint16_t fileCount = [data nextShort];
-
+		
         if (_header.sartFile.minorOSVersion <= 7) {
-            data.currentOffset += 8; // Skip unknown 2 and 3 on L
+            data.currentOffset += 8; // Skip unknown 2 and 3 on ML
         }
         
         for (int x = 0; x < fileCount; x++) {
@@ -82,7 +82,7 @@
                 CGDataProviderRef provider = CGDataProviderCreateWithCFData((CFDataRef)imageData);
                 CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
                 CGBitmapInfo bitmapInfo = kCGImageAlphaFirst | kCGBitmapByteOrder32Little;
-
+				
                 CGImageRef cgImage = CGImageCreate(header.width, header.height, 8, 32, 4 * header.width, colorSpace, bitmapInfo, provider, NULL, NO, kCGRenderingIntentDefault);
                 
                 NSMutableData *pngData = [NSMutableData dataWithCapacity:0];
@@ -113,7 +113,7 @@
 {
     if ((self = [super init])) {
         _fileHeaders = [[NSMutableArray array] retain];
-        _type        = SFDescriptorTypePNG;
+        _type        = 0;
     }
     
     return self;
@@ -127,11 +127,10 @@
 
 - (NSData *)headerData
 {
-    NSUInteger length = self.expectedLength;
-    
-    NSMutableData *headerData = [NSMutableData dataWithCapacity:length - 4 * self.fileHeaders.count];
+    NSMutableData *headerData = [NSMutableData dataWithCapacity:12];
     NSMutableData *fileHeaderData = [NSMutableData dataWithCapacity:12 * self.fileHeaders.count];
     
+    uint32_t totalSize  = 0;
     uint32_t unknown2   = 0; // Yeah i don't know this yet. Luckily these two values are dropped in 10.8
     
     uint16_t type  = CFSwapInt16HostToLittle(self.type);
@@ -139,12 +138,13 @@
     
     for (SFFileHeader *header in self.fileHeaders) {
         [fileHeaderData appendData:header.headerData];
+        totalSize += header.expectedRawContentSize;
     }
     
     if (self.type == SFDescriptorTypePDF && self.fileHeaders.count > 0)
         unknown2 = (uint32_t)[[self.fileHeaders objectAtIndex:0] expectedRawContentSize] - 47; // Seems to be for PDFs
     
-    uint32_t totalSize = CFSwapInt32HostToLittle((uint32_t)fileHeaderData.length);
+    totalSize = CFSwapInt32HostToLittle(totalSize);
     unknown2  = CFSwapInt32HostToLittle(unknown2);
     
     [headerData appendBytes:&type length:sizeof(type)];
@@ -153,9 +153,9 @@
     if (self.header.sartFile.minorOSVersion <= 7) { // Gone in 10.8
         [headerData appendBytes:&unknown2 length:sizeof(unknown2)];
         [headerData appendBytes:&totalSize length:sizeof(totalSize)];
-    
+		
     }
-    
+	
     [headerData appendData:fileHeaderData];
     
     return headerData;
@@ -170,14 +170,24 @@
 
 - (void)addFileAtURL:(NSURL *)url
 {
+    NSString *fileName = url.lastPathComponent;
+    
+    if ([fileName.pathExtension isEqualToString:@"pdf"])
+        self.type = SFDescriptorTypePDF;
+	else if ([fileName.pathExtension isEqualToString:@"tif"] && self.type == 0)
+		self.type = SFDescriptorTypeTIF;
+	else if (self.type == 0)
+		self.type = SFDescriptorTypePNG;
+	
     SFFileHeader *header = [SFFileHeader fileHeaderWithContentsOfURL:url];
     
     if (self.type == SFDescriptorTypePDF && self.fileHeaders.count == 0)
         header.imageClass = [NSPDFImageRep class];
     
     [self.fileHeaders addObject:header];
-
-	if (self.type == SFDescriptorTypePDF && self.fileHeaders.count == 1) { // only interpolate for the first item
+	
+	if (self.type == SFDescriptorTypePDF && self.fileHeaders.count == 1) {
+		
 		// NSPDFImageRep has inaccurate dimension calculation. Let's do it ourselves.
 		CGPDFDocumentRef pdf = CGPDFDocumentCreateWithURL((CFURLRef)url);
 		CGPDFPageRef page = CGPDFDocumentGetPage(pdf, 1);
@@ -189,9 +199,10 @@
 		
 		bounds.size.width  = header.width;
 		bounds.size.height = header.height;
-
+		
 		// If the PDF's cache images weren't written, write them out homes.
-		if (!self.header.sartFile.shouldWritePDFReps && self.fileHeaders.count == 1) {        
+		if (!self.header.sartFile.shouldWritePDFReps) {
+			
 			NSBitmapImageRep *legacy = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:NULL 
 																			   pixelsWide:bounds.size.width
 																			   pixelsHigh:bounds.size.height
@@ -209,6 +220,7 @@
 			[NSGraphicsContext saveGraphicsState];
 			[NSGraphicsContext setCurrentContext:ctx];
 			[ctx setShouldAntialias:NO];
+			//			CGContextTranslateCTM(context, 0.0, bounds.size.height);
 			CGContextScaleCTM(context, 1.0, 1.0);
 			
 			// Grab the first PDF page
@@ -243,13 +255,15 @@
 			
 			[NSGraphicsContext saveGraphicsState];
 			[NSGraphicsContext setCurrentContext:ctx];
-			[ctx setShouldAntialias:NO];			
+			[ctx setShouldAntialias:NO];
+			
+			//			CGContextTranslateCTM(context, 0.0, bounds.size.height * 2);
 			CGContextScaleCTM(context, 2.0, 2.0);
 			
 			// CGPDFPageGetDrawingTransform provides an easy way to get the transform for a PDF page. It will scale down to fit, including any
 			// base rotations necessary to display the PDF page correctly. 
 			pdfTransform = CGPDFPageGetDrawingTransform(page, kCGPDFMediaBox, bounds, 0, true);
-
+			
 			// And apply the transform.
 			CGContextConcatCTM(context, pdfTransform);
 			
