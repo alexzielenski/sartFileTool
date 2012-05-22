@@ -45,73 +45,134 @@ int main (int argc, const char * argv[])
     int majorOS  = -1;
     int minorOS  = 0;
     int bugFixOS = 0;
+
+	int c;
+	int option_index = 0;
 	
-	int startIdx = 0;
+	NSString *path1, *path2;
 	
-	for (int x = 1; x < argc; x++) {
-		if ((!strcmp(argv[x], "-os"))) {
-            NSString *os = [NSString stringWithUTF8String:argv[x + 1]];
-            NSArray *delimited = [os componentsSeparatedByString:@"."];
-			
-            for (int idx = 0; idx < delimited.count; idx++) {
-                NSNumber *num = [delimited objectAtIndex:idx];
-                int vers = num.intValue;
-                
-                if (idx == 0)
-                    majorOS = vers;
-                else if (idx == 1)
-                    minorOS = vers;
-                else if (idx == 2)
-                    bugFixOS = vers;
-                
-            }
-			
-			// Skip over the OS option
-            x++;
-			continue;
-		} else if  ((!strcmp(argv[x], "-d"))) {
-			encode = NO;
-			continue;
-		} else if  ((!strcmp(argv[x], "-e"))) {
-			encode = YES;
-			continue;
-        } else if ((!strcmp(argv[x], "-h")) || (!strcmp(argv[x], "-help")) || (!strcmp(argv[x], "?"))) {
-            printf(help, NULL);
-            return 1;
-            break;
-        } else if ((!strcmp(argv[x], "-pdf"))) { // hidden option
-            pdf = YES;   
-            continue;
-		} else {
-			startIdx = x;
-			continue;
+	static struct option long_options[] = {
+		{"pdf",    no_argument,       0,  0  },
+		{"os",     required_argument, 0,  0  },
+		{"help",   required_argument, 0,  'h'},
+		{0,        0,                 0,  0  }};
+	
+	while ((c = getopt_long(argc, (char *const*)argv, "e:d", long_options, &option_index)) != -1) {
+		switch (c) {
+			case 0: {
+				switch (option_index) {
+					case 0: // --pdf
+						pdf = YES;
+						break;
+					case 1: {// --os
+						
+						NSString *os = [NSString stringWithUTF8String:argv[optind + 1]];
+						NSArray *delimited = [os componentsSeparatedByString:@"."];
+						
+						for (int idx = 0; idx < delimited.count; idx++) {
+							NSNumber *num = [delimited objectAtIndex:idx];
+							int vers = num.intValue;
+							
+							if (idx == 0)
+								majorOS = vers;
+							else if (idx == 1)
+								minorOS = vers;
+							else if (idx == 2)
+								bugFixOS = vers;
+							
+						}
+						
+						break;
+					}
+					case 2: // help
+						printf(help, NULL);
+						return 1;
+						break;
+						break;
+						
+				}
+				break;
+			}
+			case 'e': {
+				encode = YES;
+				
+				optind--;
+				
+				const char *cp1 = NULL, *cp2 = NULL;
+				
+				for(; optind < argc && *argv[optind] != '-'; optind++){
+					const char *opt = argv[optind];
+					
+					if (cp1 == NULL)
+						cp1 = opt;
+					else if (cp2 == NULL)
+						cp2 = opt;
+					else {
+						NSLog(@"Something went wrong at option %s", opt);
+						printf(help, NULL);
+						return 1;
+					}
+				}
+				
+				path1 = [NSString stringWithUTF8String:cp1];
+				path2 = [NSString stringWithUTF8String:cp2];
+				
+				break;
+			}
+			case 'd': {
+				encode = NO;
+				
+				const char *cp1 = NULL, *cp2 = NULL;
+				
+				for(; optind < argc && *argv[optind] != '-'; optind++){
+					const char *opt = argv[optind];
+					
+					if (cp1 == NULL)
+						cp1 = opt;
+					else if (cp2 == NULL)
+						cp2 = opt;
+					else {
+						NSLog(@"Something went wrong at option %s", opt);
+						printf(help, NULL);
+						return 1;
+					}
+				}
+				
+				if (cp2 == NULL) {
+					cp2 = cp1;
+					cp1 = NULL;
+				}
+				
+				if (cp1 != NULL)
+					path1 = [NSString stringWithUTF8String:cp1];
+				else
+					path1 = [[SArtFile sArtFilePath] path];
+				if (cp2 != NULL)
+					path2 = [NSString stringWithUTF8String:cp2];
+				else {
+					NSLog(@"Something went horribly wrong.");
+					printf(help, NULL);
+					return 1;
+				}
+				
+				break;
+			}
+			default:
+				printf(help, NULL);
+				return 1;
+				break;
 		}
 	}
-    
-    NSString *path1 = nil, *path2 = nil;
-    
-    if (argc <= startIdx) {
-		
-        NSLog(@"Missing arguments");
+
+	if (!path1 || !path2) {
+		printf("Missing arguments\n");
 		printf(help, NULL);
 		return 1;
-		
 	}
 	
-	if (startIdx == argc - 1) {
-		path1 = [[SArtFile sArtFilePath] path];
-		path2 = [NSString stringWithUTF8String:argv[startIdx]];
-	} else {
-		path1 = [NSString stringWithUTF8String:argv[startIdx]];
-		path2 = [NSString stringWithUTF8String:argv[startIdx + 1]];
-	}
-
-    
     path1 = [path1 stringByExpandingTildeInPath];
     path2 = [path2 stringByExpandingTildeInPath];
-    
-	NSLog(@"%@, %@", path1, path2);
-	
+
     @try {
         uint64_t start = mach_absolute_time();
 		
