@@ -29,7 +29,9 @@
     if (width == 0 || height == 0)
         return nil;
     
-    unsigned char *bytes = [bitmapSelf bitmapData];
+    unsigned char *bitmapData = bitmapSelf.bitmapData;
+    unsigned char *bytes = malloc(4 * height * width);
+    memcpy(bytes, bitmapData, 4 * height * width);
     
     vImage_Buffer src;
     src.data     = (void*)bytes;
@@ -59,7 +61,48 @@
         vImageUnpremultiplyData_BGRA8888(&src, &src, 0);
     }
     
-    return [NSData dataWithBytesNoCopy:src.data length:width * height * 4 freeWhenDone:NO];
+    return [NSData dataWithBytes:src.data length:width * height * 4];
+	
+//	unsigned char *bytes = [bitmapSelf bitmapData];
+//	
+//	vImage_Buffer src;
+//	src.data     = (void*)bytes;
+//	src.width    = width;
+//	src.height   = height;
+//	src.rowBytes = 4 * width;
+//	
+//    for (NSUInteger y = 0; y < width * height * 4; y += 4) { // bgra little endian + alpha first
+//		uint8_t a, r, g, b;
+//		
+//		if (bitmapSelf.bitmapFormat & NSAlphaFirstBitmapFormat) {
+//			a = bytes[y];
+//			r = bytes[y+1];
+//			g = bytes[y+2];
+//			b = bytes[y+3];
+//		} else {
+//			r = bytes[y+0];
+//			g = bytes[y+1];
+//			b = bytes[y+2];
+//			a = bytes[y+3];
+//		}
+//	
+//		// unpremultiply alpha if there is any
+//		if (a == 0) {
+//			b = 0;
+//			g = 0;
+//			r = 0;
+//		}
+//		bytes[y]=b;
+//		bytes[y+1]=g;
+//		bytes[y+2]=r;
+//		bytes[y+3]=a;
+//	}
+//	
+//	if (!(bitmapSelf.bitmapFormat & NSAlphaNonpremultipliedBitmapFormat)) {
+//        vImageUnpremultiplyData_BGRA8888(&src, &src, 0);
+//    }
+//	
+//    return [NSData dataWithBytesNoCopy:bytes length:width * height * 4 freeWhenDone:NO];
     
 }
 

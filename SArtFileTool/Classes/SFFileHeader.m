@@ -34,8 +34,7 @@
 @synthesize height     = _height;
 @synthesize length     = _length;
 @synthesize offset     = _offset;
-@synthesize imageData  = _imageData;
-@synthesize imageClass = _imageClass;
+@synthesize imageRepresentation = _imageRepresentation;
 
 + (SFFileHeader *)fileHeaderWithData:(NSData *)data range:(NSRange)range
 {
@@ -65,12 +64,13 @@
 {
     if ((self = [self init])) {
         NSData *data = [NSData dataWithContentsOfURL:url];
-        self.imageData = data;
         
         // Get the size
         Class repClass = ([url.pathExtension.lowercaseString isEqualToString:@"pdf"]) ? [NSPDFImageRep class] : [NSBitmapImageRep class];
         NSImageRep *imageInstance = [[[repClass alloc] initWithData:data] autorelease];
 
+        self.imageRepresentation = imageInstance;
+        
 		self.width  = (uint16_t)imageInstance.pixelsWide;
 		self.height = (uint16_t)imageInstance.pixelsHigh;
     }
@@ -80,9 +80,7 @@
 
 - (id)init
 {
-    if ((self = [super init])) {
-        _imageClass = [NSBitmapImageRep class];
-        
+    if ((self = [super init])) {        
         _width  = 1;
         _height = 1;
         _length = 1 * 1 * 4;
@@ -94,13 +92,15 @@
 
 - (void)dealloc
 {
-    self.imageData = nil;
+    self.imageRepresentation = nil;
     [super dealloc];
 }
 
-- (NSImageRep *)imageRepresentation
+- (NSData *)imageData
 {
-    return [[[self.imageClass alloc] initWithData:self.imageData] autorelease];
+    if ([self.imageRepresentation isKindOfClass:[NSPDFImageRep class]])
+        return [(NSPDFImageRep *)self.imageRepresentation PDFRepresentation];
+    return [(NSBitmapImageRep *)self.imageRepresentation representationUsingType:NSPNGFileType properties:nil];
 }
 
 - (NSData *)headerData
@@ -121,19 +121,15 @@
 }
 
 - (NSData *)sartFileData
-{
-    if (self.imageClass == [NSPDFImageRep class]) {
-        return self.imageData;
-    }
-    
+{    
     // Process the PNG Data to be ABGR
     return self.imageRepresentation.sartFileData;
 }
 
 - (NSUInteger)expectedRawContentSize
 {
-    if (self.imageClass == [NSPDFImageRep class])
-        return self.imageData.length;
+    if ([self.imageRepresentation isKindOfClass:[NSPDFImageRep class]])
+        return [[(NSPDFImageRep *)self.imageRepresentation PDFRepresentation] length];
     
     return self.width * self.height * 4;
 }

@@ -31,8 +31,7 @@
 @property (nonatomic, assign) uint16_t height;
 @property (nonatomic, assign) uint32_t length;
 @property (nonatomic, assign) uint32_t offset;
-@property (nonatomic, retain) NSData   *imageData;
-@property (nonatomic, assign) Class    imageClass;
+@property (nonatomic, retain) NSImageRep *imageRepresentation;
 
 + (SFFileHeader *)fileHeaderWithData:(NSData *)data range:(NSRange)range;
 - (id)initWithData:(NSData *)data range:(NSRange)range;
@@ -40,7 +39,7 @@
 + (SFFileHeader *)fileHeaderWithContentsOfURL:(NSURL *)url;
 - (id)initWithContentsOfURL:(NSURL *)url;
 
-- (NSImageRep *)imageRepresentation;
+- (NSData *)imageData;
 
 - (NSData *)headerData;
 - (NSData *)sartFileData;

@@ -48,7 +48,7 @@
 		FAEEEEEA15647E7C006343AF /* SArtFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SArtFile.h; path = Classes/SArtFile.h; sourceTree = "<group>"; };
 		FAEEEEEB15647E7C006343AF /* SArtFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SArtFile.m; path = Classes/SArtFile.m; sourceTree = "<group>"; };
 		FAEEEEEF15648316006343AF /* SFDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SFDescriptor.h; path = Classes/SFDescriptor.h; sourceTree = "<group>"; };
-		FAEEEEF015648316006343AF /* SFDescriptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SFDescriptor.m; path = Classes/SFDescriptor.m; sourceTree = "<group>"; };
+		FAEEEEF015648316006343AF /* SFDescriptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SFDescriptor.m; path = Classes/SFDescriptor.m; sourceTree = "<group>"; wrapsLines = 1; };
 		FAEEEEF215648322006343AF /* SFHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SFHeader.h; path = Classes/SFHeader.h; sourceTree = "<group>"; };
 		FAEEEEF315648322006343AF /* SFHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SFHeader.m; path = Classes/SFHeader.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
