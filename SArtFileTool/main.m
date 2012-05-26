@@ -66,9 +66,9 @@ int main (int argc, const char * argv[])
 						break;
 					case 1: {// --os
 						
-						NSString *os = [NSString stringWithUTF8String:argv[optind + 1]];
+						NSString *os = [NSString stringWithUTF8String:optarg];
 						NSArray *delimited = [os componentsSeparatedByString:@"."];
-						
+
 						for (int idx = 0; idx < delimited.count; idx++) {
 							NSNumber *num = [delimited objectAtIndex:idx];
 							int vers = num.intValue;
@@ -79,7 +79,6 @@ int main (int argc, const char * argv[])
 								minorOS = vers;
 							else if (idx == 2)
 								bugFixOS = vers;
-							
 						}
 						
 						break;
@@ -176,7 +175,6 @@ int main (int argc, const char * argv[])
     @try {
         uint64_t start = mach_absolute_time();
 		
-        
         SArtFile *file = nil;
         if (!encode) {
             file = [SArtFile sArtFileWithFileAtURL:[NSURL fileURLWithPath:path1]
@@ -185,7 +183,6 @@ int main (int argc, const char * argv[])
                                           bugFixOS:bugFixOS];
 			
             file.shouldWritePDFReps = pdf;
-            
             [file decodeToFolderAtURL:[NSURL fileURLWithPath:path2] error:nil];
         } else {
             file = [SArtFile sartFileWithFolderAtURL:[NSURL fileURLWithPath:path1]];
