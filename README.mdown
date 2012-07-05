@@ -65,25 +65,25 @@ First 8 bytes of the SArtFile.bin. Gives some key information about the file.
 		<th>Type</th>
 		<th>Purpose</th>
 	</tr>
-	<tr style="text-align: center">
+	<tr>
 		<td>0</td>
 		<td>2</td>
 		<td>uint16_t</td>
 		<td>Believed to be a version number. Only found to be 2 right now.</td>
 	</tr>
-	<tr style="text-align: center">
+	<tr>
 		<td>2</td>
 		<td>2</td>
 		<td>uint16_t</td>
 		<td>Amount of file descriptors found within the container.</td>
 	</tr>
-	<tr style="text-align: center">
+	<tr>
 		<td>4</td>
 		<td>4</td>
 		<td>uint32_t</td>
 		<td>"Master offset" at which the file data begins. All file data offsets in descriptors is offset by this number.</td>
 	</tr>
-	<tr style="text-align: center">
+	<tr>
 		<td>8</td>
 		<td>…</td>
 		<td>uint32_t</td>
@@ -106,19 +106,19 @@ I recently found this new sector of 820 bytes (824 under 10.8). It is a very odd
 		<th>Type</th>
 		<th>Purpose</th>
 	</tr>
-	<tr style="text-align: center">
+	<tr>
 		<td>0</td>
 		<td>2</td>
 		<td>uint16_t</td>
 		<td>Appears to be an offset to file data</td>
 	</tr>
-	<tr style="text-align: center">
+	<tr>
 		<td>2</td>
 		<td>2</td>
 		<td>uint16_t</td>
 		<td>Looks like a Mac OS X version number. I have seen this to be 1073 and 1074 so far.</td>
 	</tr>
-	<tr style="text-align: center">
+	<tr>
 		<td>4</td>
 		<td>4</td>
 		<td>uint32_t</td>
@@ -139,19 +139,19 @@ On the latest build of 10.8, the format is fairly similar. There did seem to be 
 		<th>Type</th>
 		<th>Purpose</th>
 	</tr>
-	<tr style="text-align: center">
+	<tr>
 		<td>0</td>
 		<td>4</td>
 		<td>uint32_t</td>
 		<td>So far only a 1</td>
 	</tr>
-	<tr style="text-align: center">
+	<tr>
 		<td>4</td>
 		<td>2</td>
 		<td>uint16_t</td>
 		<td>Looks like an offset to something.</td>
 	</tr>
-	<tr style="text-align: center">
+	<tr>
 		<td>6</td>
 		<td>2</td>
 		<td>uint16_t</td>
@@ -167,42 +167,42 @@ Here is some sample data:
 		<th>uint16</th>
 		<th>uint16</th>
 	</tr>
-	<tr style="text-align: center">
+	<tr>
 		<td>1</td>
 		<td>7376</td>
 		<td>1351</td>	
 	</tr>
-	<tr style="text-align: center">
+	<tr>
 		<td>1</td>
 		<td>7760</td>
 		<td>1351</td>	
 	</tr>
-	<tr style="text-align: center">
+	<tr>
 		<td>1</td>
 		<td>8176</td>
 		<td>1351</td>	
 	</tr>
-	<tr style="text-align: center">
+	<tr>
 		<td>1</td>
 		<td>8560</td>
 		<td>1351</td>	
 	</tr>
-	<tr style="text-align: center">
+	<tr>
 		<td>1</td>
 		<td>8976</td>
 		<td>1351</td>	
 	</tr>
-	<tr style="text-align: center">
+	<tr>
 		<td>1</td>
 		<td>9360</td>
 		<td>1351</td>	
 	</tr>
-	<tr style="text-align: center">
+	<tr>
 		<td>1</td>
 		<td>9776</td>
 		<td>1351</td>	
 	</tr>
-	<tr style="text-align: center">
+	<tr>
 		<td>1</td>
 		<td>10144</td>
 		<td>1351</td>	
@@ -222,31 +222,31 @@ Here is some sample data:
 		<th>Type</th>
 		<th>Purpose</th>
 	</tr>
-	<tr style="text-align: center">
+	<tr>
 		<td>0</td>
 		<td>2</td>
 		<td>uint16_t</td>
 		<td>A flag indicating the type of image. 1 = retina_resource, 2 = legacy_resource, 3 = pdf</td>
 	</tr>
-	<tr style="text-align: center">
+	<tr>
 		<td>2</td>
 		<td>2</td>
 		<td>uint16_t</td>
 		<td>Amount of representations for the file.</td>
 	</tr>
-	<tr style="text-align: center">
+	<tr>
 		<td>4</td>
 		<td>4</td>
 		<td>uint32_t</td>
 		<td><b>Dropped in 10.8</b>: Unknown. Seems to be skipped over. Also, in the case of PDFs, it is the pdf data length - 47.</td>
 	</tr>
-	<tr style="text-align: center">
+	<tr>
 		<td>8</td>
 		<td>4</td>
 		<td>uint32_t</td>
 		<td><b>Dropped in 10.8</b>: Sum of each image's data length.</td>
 	</tr>
-	<tr style="text-align: center">
+	<tr>
 		<td>12/4</td>
 		<td>…</td>
 		<td>…</td>
@@ -265,25 +265,25 @@ Here is some sample data:
 		<th>Type</th>
 		<th>Purpose</th>
 	</tr>
-	<tr style="text-align: center">
+	<tr>
 		<td>0</td>
 		<td>2</td>
 		<td>uint16_t</td>
 		<td>Width of the image in pixels.</td>
 	</tr>
-	<tr style="text-align: center">
+	<tr>
 		<td>2</td>
 		<td>2</td>
 		<td>uint16_t</td>
 		<td>Height of the image in pixels.</td>
 	</tr>
-	<tr style="text-align: center">
+	<tr>
 		<td>4</td>
 		<td>4</td>
 		<td>uint32_t</td>
 		<td>Length of the image data.</td>
 	</tr>
-	<tr style="text-align: center">
+	<tr>
 		<td>8</td>
 		<td>4</td>
 		<td>uint32_t</td>
