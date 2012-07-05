@@ -172,9 +172,12 @@ int main (int argc, const char * argv[])
     path1 = [path1 stringByExpandingTildeInPath];
     path2 = [path2 stringByExpandingTildeInPath];
 
+    printf("sartFileTool and reverse engineering by Alex Zielenski (http://alexzielenski.com)\n");
+    
     @try {
+#ifdef DEBUG
         uint64_t start = mach_absolute_time();
-		
+#endif
         SArtFile *file = nil;
         if (!encode) {
             file = [SArtFile sArtFileWithFileAtURL:[NSURL fileURLWithPath:path1]
