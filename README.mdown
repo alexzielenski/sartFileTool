@@ -93,6 +93,9 @@ First 8 bytes of the SArtFile.bin. Gives some key information about the file.
 
 ### Unknown
 
+** I RECENTLY FOUND OUT THAT THIS SECTION HAS DATA PERTAINING TO THE IMAGES WITH MULTIPLE REPRESENTATIONS AKA 2X **
+* This sector is 820 bytes on Lion because there are 205 images with 2x representations on Lion and on Mountain Lion there are 206 (820 / 205 = 4; 824 / 206 = 4)*
+
 Currently, SArtFileTool copies this sector of bytes into the "buffer1" key of the receipt.
 
 I recently found this new sector of 820 bytes (824 under 10.8). It is a very odd area. I investigated this under 10.7.4. They seem to be in 8 byte groupings in this format:
@@ -125,8 +128,6 @@ I recently found this new sector of 820 bytes (824 under 10.8). It is a very odd
 		<td>So far only a 1</td>
 	</tr>
 </table>
-
-This is very uneven, it ents with an offset/version grouping and ends with an offset/version grouping so there are 4 bytes of 1 missing.
 
 ***Format on 10.8***
 
