@@ -1,4 +1,4 @@
-sartFileTool for Lion & Mountain Lion
+sartFileTool
 ===================================
 sartFileTool is a command line tool for encoding and decoding the SArtFile.bin (Shared ArtFile) found in `/System/Library/PrivateFrameworks/CoreUI.framework/Versions/A/SArtFile.bin`. It its current state it can flawlessly decode and encode SArtFile.bin. 
 
